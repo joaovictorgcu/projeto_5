@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Cofre — Keyflow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Cofre de Senhas</h1>
+    <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
+</div>
+
+<!-- Barra de busca -->
+<form action="{{ url_for('main.vault_search') }}" method="GET">
+    <div class="search-bar">
+        <span class="search-icon"><svg class="icon"><use href="#icon-search"/></svg></span>
+        <input type="text" name="q" placeholder="Buscar por nome ou login..." value="{{ search_query | default('') }}" aria-label="Buscar credenciais">
+    </div>
+</form>
+
+{% if search_query is defined and search_query %}
+<p class="text-muted" style="margin-bottom:1rem;">
+    {{ credentials | length }} resultado(s) para "<strong>{{ search_query }}</strong>"
+    &middot; <a href="{{ url_for('main.vault') }}">Limpar busca</a>
+</p>
+{% endif %}
+
+{% if credentials %}
+<div class="credentials-grid">
+    {% for cred in credentials %}
+    <div class="credential-card">
+        <div class="credential-header">
+            <h3>{{ cred.name }}</h3>
+            <div class="credential-actions">
+                <a href="{{ url_for('main.credential_permissions', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Permissoes" aria-label="Gerenciar permissoes de {{ cred.name }}"><svg class="icon"><use href="#icon-users"/></svg></a>
+                <a href="{{ url_for('main.credential_edit', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Editar" aria-label="Editar {{ cred.name }}"><svg class="icon"><use href="#icon-edit"/></svg></a>
+                <form method="POST" action="{{ url_for('main.credential_delete', cred_id=cred.id) }}" class="inline-form" onsubmit="return confirm('Tem certeza que deseja deletar esta credencial?')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-sm btn-ghost btn-danger" title="Deletar" aria-label="Deletar {{ cred.name }}"><svg class="icon"><use href="#icon-trash"/></svg></button>
+                </form>
+            </div>
+        </div>
+        <div class="credential-body">
+            <div class="credential-field">
+                <label>Login / E-mail</label>
+                <div class="field-value">
+                    <span>{{ cred.login }}</span>
+                    <button class="btn-copy" onclick="copyText('{{ cred.login }}')" title="Copiar login" aria-label="Copiar login"><svg class="icon icon-sm"><use href="#icon-copy"/></svg></button>
+                </div>
+            </div>
+            <div class="credential-field">
+                <label>Senha</label>
+                <div class="field-value">
+                    <span class="password-mask" id="pw-{{ cred.id }}">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</span>
+                    <span class="field-btns">
+                        <button class="btn-copy" onclick="revealPassword({{ cred.id }})" title="Mostrar/Ocultar" aria-label="Revelar senha"><svg class="icon icon-sm"><use href="#icon-eye"/></svg></button>
+                        <button class="btn-copy" onclick="copyPassword({{ cred.id }})" title="Copiar senha" aria-label="Copiar senha"><svg class="icon icon-sm"><use href="#icon-copy"/></svg></button>
+                    </span>
+                </div>
+            </div>
+            {% if cred.notes %}
+            <div class="credential-field">
+                <label>Observacao</label>
+                <p class="notes-text">{{ cred.notes }}</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="credential-footer">
+            <small>Criada por {{ cred.creator.name }} em {{ cred.created_at.strftime('%d/%m/%Y') }}</small>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state-container">
+    <div class="empty-icon"><svg class="icon-xl"><use href="#icon-lock"/></svg></div>
+    <h2>{% if search_query is defined and search_query %}Nenhuma credencial encontrada{% else %}Seu cofre esta vazio{% endif %}</h2>
+    <p>{% if search_query is defined and search_query %}Tente buscar com outros termos.{% else %}Adicione sua primeira credencial para comecar a compartilhar senhas com seguranca.{% endif %}</p>
+    {% if not (search_query is defined and search_query) %}
+    <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

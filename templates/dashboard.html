@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Keyflow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <p class="text-muted">{{ org.name }}</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number" data-count="{{ total_credentials }}">{{ total_credentials }}</div>
+        <div class="stat-label">Credenciais</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" data-count="{{ total_members }}">{{ total_members }}</div>
+        <div class="stat-label">Membros ativos</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ org.invite_code }}</div>
+        <div class="stat-label">Codigo de convite</div>
+    </div>
+</div>
+
+<!-- Health Score -->
+<div class="health-section">
+    <div class="card">
+        <div class="card-header">
+            <h2><svg class="icon icon-sm" style="margin-right:0.35rem"><use href="#icon-shield-check"/></svg> Saude das Senhas</h2>
+        </div>
+        <div class="card-body" id="health-container">
+            <div class="health-bar-container">
+                <div class="health-bar-track">
+                    <div class="health-bar-fill" id="health-bar" style="width:0%;background:var(--gray-300)"></div>
+                </div>
+                <div class="health-score-number" id="health-score" style="color:var(--gray-400)">--</div>
+            </div>
+            <ul class="health-issues" id="health-issues">
+                <li style="color:var(--text-muted)">Carregando analise...</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-header">
+            <h2>Ultimos acessos</h2>
+            <a href="{{ url_for('main.logs') }}" class="btn btn-sm btn-outline">Ver todos</a>
+        </div>
+        <div class="card-body">
+            {% if recent_logs %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Quem</th>
+                        <th>Credencial</th>
+                        <th>Acao</th>
+                        <th>Quando</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in recent_logs %}
+                    <tr>
+                        <td>
+                            <span class="member-avatar-sm">{{ log.user.name[0] | upper }}</span>
+                            {{ log.user.name }}
+                        </td>
+                        <td>{{ log.credential.name }}</td>
+                        <td><span class="badge badge-{{ log.action.split()[0] }}">{{ log.action }}</span></td>
+                        <td>{{ log.accessed_at.strftime('%d/%m %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-state">Nenhum acesso registrado ainda.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Membros</h2>
+            <a href="{{ url_for('main.members') }}" class="btn btn-sm btn-outline">Gerenciar</a>
+        </div>
+        <div class="card-body">
+            <ul class="member-list">
+                {% for member in members %}
+                <li class="member-item">
+                    <div class="member-info">
+                        <span class="member-avatar">{{ member.name[0] | upper }}</span>
+                        <div>
+                            <span class="member-name">{{ member.name }}</span>
+                            {% if member.role == 'admin' %}<span class="badge badge-admin">Admin</span>{% endif %}
+                        </div>
+                    </div>
+                    <span class="member-status {% if member.is_active_member %}status-active{% else %}status-removed{% endif %}">
+                        {{ 'Ativo' if member.is_active_member else 'Removido' }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Carregar Health Score
+fetch('/api/health-score', {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+})
+.then(function(r) { return r.json(); })
+.then(function(data) {
+    var bar = document.getElementById('health-bar');
+    var score = document.getElementById('health-score');
+    var issues = document.getElementById('health-issues');
+
+    // Animar score
+    var color = data.score >= 80 ? '#22c55e' : data.score >= 50 ? '#eab308' : '#ef4444';
+    bar.style.width = data.score + '%';
+    bar.style.background = color;
+    score.textContent = data.score + '/100';
+    score.style.color = color;
+
+    // Issues
+    issues.innerHTML = '';
+    if (data.total === 0) {
+        issues.innerHTML = '<li>Adicione credenciais para ver a analise de seguranca.</li>';
+    } else if (data.issues.length === 0) {
+        issues.innerHTML = '<li style="color:#22c55e"><span class="health-dot" style="background:#22c55e"></span> Todas as senhas estao em bom estado!</li>';
+    } else {
+        data.issues.forEach(function(issue) {
+            var dotColor = issue.type === 'duplicate' ? '#ef4444' : issue.type === 'weak' ? '#f97316' : '#eab308';
+            issues.innerHTML += '<li><span class="health-dot" style="background:' + dotColor + '"></span> ' + issue.message + '</li>';
+        });
+    }
+});
+</script>
+{% endblock %}
