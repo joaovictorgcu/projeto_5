@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Criar Conta — Keyflow{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <h1 class="auth-brand"><span class="brand-key">key</span><span class="brand-flow">flow</span></h1>
+        <h2>Criar sua conta</h2>
+
+        <form method="POST" action="{{ url_for('auth.register') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="form-group">
+                <label for="name">Nome completo</label>
+                <input type="text" id="name" name="name" required placeholder="Seu nome">
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required placeholder="seu@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required placeholder="Minimo 6 caracteres" minlength="6">
+            </div>
+
+            <hr class="form-divider">
+
+            <p class="form-hint">Crie uma nova organizacao ou entre em uma existente com codigo de convite.</p>
+
+            <div class="form-group">
+                <label for="org_name">Nome da organizacao (nova equipe)</label>
+                <input type="text" id="org_name" name="org_name" placeholder="Ex: Minha Agencia">
+            </div>
+
+            <div class="form-group">
+                <label for="invite_code">Ou codigo de convite (equipe existente)</label>
+                <input type="text" id="invite_code" name="invite_code" placeholder="Ex: a1b2c3d4">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Criar conta</button>
+        </form>
+
+        <p class="auth-footer">
+            Ja tem conta? <a href="{{ url_for('auth.login') }}">Entre aqui</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

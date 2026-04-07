@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block title %}Keyflow — Cofre de Senhas Colaborativo para Pequenas Equipes{% endblock %}
+
+{% block content %}
+<div class="landing">
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1><span class="brand-key">key</span><span class="brand-flow">flow</span></h1>
+            <p class="hero-subtitle">Cofre de Senhas Colaborativo para Pequenas Equipes</p>
+            <p class="hero-desc">
+                Para de mandar senha pelo WhatsApp. Compartilhe credenciais com sua equipe
+                de forma segura, com controle de acesso e log de auditoria.
+            </p>
+            <div class="hero-actions">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Criar conta gratis</a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-lg">Entrar</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Numeros do problema -->
+    <section class="landing-section">
+        <h2 class="section-title">Por que voce precisa do Keyflow</h2>
+        <div class="stats-grid stats-highlight">
+            <div class="stat-card stat-danger">
+                <div class="stat-number">80%</div>
+                <div class="stat-label">das violacoes envolvem senhas fracas ou compartilhadas</div>
+            </div>
+            <div class="stat-card stat-danger">
+                <div class="stat-number">74%</div>
+                <div class="stat-label">das violacoes globais envolvem credenciais roubadas</div>
+            </div>
+            <div class="stat-card stat-danger">
+                <div class="stat-number">64%</div>
+                <div class="stat-label">dos funcionarios reutilizam senhas corporativas</div>
+            </div>
+            <div class="stat-card stat-danger">
+                <div class="stat-number">R$50M</div>
+                <div class="stat-label">multa maxima da LGPD por infracao</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="landing-section">
+        <h2 class="section-title">Tudo que sua equipe precisa</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><svg class="icon-feature"><use href="#icon-lock"/></svg></div>
+                <h3>Cofre Seguro</h3>
+                <p>Senhas criptografadas com padrao da industria. Nunca armazenadas em texto puro.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg class="icon-feature"><use href="#icon-users"/></svg></div>
+                <h3>Compartilhamento Controlado</h3>
+                <p>Defina quem pode ver a senha e quem so pode usar sem ver. Revogue acesso com um clique.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg class="icon-feature"><use href="#icon-clipboard"/></svg></div>
+                <h3>Log de Auditoria</h3>
+                <p>Saiba quem acessou qual credencial e quando. Pronto para qualquer auditoria LGPD.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg class="icon-feature"><use href="#icon-zap"/></svg></div>
+                <h3>Simples de Usar</h3>
+                <p>Interface feita para gestores, nao para tecnicos. Funciona em 5 minutos.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg class="icon-feature"><use href="#icon-user-x"/></svg></div>
+                <h3>Offboarding Seguro</h3>
+                <p>Quando alguem sai da equipe, revogue todos os acessos em 10 segundos.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg class="icon-feature"><use href="#icon-wand"/></svg></div>
+                <h3>Gerador de Senhas</h3>
+                <p>Crie senhas fortes automaticamente com nosso gerador integrado ao cofre.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como funciona -->
+    <section class="landing-section">
+        <h2 class="section-title">Como funciona</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Crie sua organizacao</h3>
+                <p>Cadastre-se e crie um espaco para sua equipe em menos de 1 minuto.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Convide sua equipe</h3>
+                <p>Compartilhe o codigo de convite e sua equipe entra com um clique.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Salve suas senhas</h3>
+                <p>Cadastre credenciais no cofre e defina quem pode ver cada uma.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Controle total</h3>
+                <p>Acompanhe cada acesso no log de auditoria. Revogue quando quiser.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Planos -->
+    <section class="landing-section">
+        <h2 class="section-title">Planos</h2>
+        <p class="section-subtitle">Comece gratis. Escale quando precisar.</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Free</h3>
+                    <div class="pricing-price">R$ 0<span>/mes</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>1 usuario</li>
+                    <li>Cofre pessoal</li>
+                    <li>Gerador de senhas</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-block">Comecar gratis</a>
+            </div>
+            <div class="pricing-card pricing-popular">
+                <div class="pricing-badge">Mais popular</div>
+                <div class="pricing-header">
+                    <h3>Starter</h3>
+                    <div class="pricing-price">R$ 49<span>/mes</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Ate 5 usuarios</li>
+                    <li>Cofre compartilhado</li>
+                    <li>Controle de permissoes</li>
+                    <li>Log de auditoria</li>
+                    <li>Convite de membros</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-block">Comecar agora</a>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Growth</h3>
+                    <div class="pricing-price">R$ 129<span>/mes</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Ate 15 usuarios</li>
+                    <li>Tudo do Starter</li>
+                    <li>MFA centralizado</li>
+                    <li>Grupos de acesso</li>
+                    <li>App mobile</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-block">Em breve</a>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>Business</h3>
+                    <div class="pricing-price">R$ 299<span>/mes</span></div>
+                </div>
+                <ul class="pricing-features">
+                    <li>Ate 50 usuarios</li>
+                    <li>Tudo do Growth</li>
+                    <li>Relatorios LGPD</li>
+                    <li>SSO (Google/MS365)</li>
+                    <li>Integracoes de RH</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-block">Em breve</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>Suas senhas estao seguras?</h2>
+        <p>Quando alguem sai da sua equipe, voce sabe revogar todos os acessos em 10 segundos?</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Comece agora — e gratis</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="footer-brand">
+            <span class="brand-key">key</span><span class="brand-flow">flow</span>
+        </div>
+        <p>Cofre de Senhas Colaborativo para Pequenas Equipes</p>
+        <p class="footer-copy">Projeto Academico 2026 — Ciencia da Computacao — 4&ordm; Periodo</p>
+    </footer>
+</div>
+{% endblock %}

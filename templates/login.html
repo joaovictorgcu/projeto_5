@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Entrar — Keyflow{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <h1 class="auth-brand"><span class="brand-key">key</span><span class="brand-flow">flow</span></h1>
+        <h2>Entrar na sua conta</h2>
+
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required placeholder="seu@email.com" autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required placeholder="Sua senha" autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        </form>
+
+        <p class="auth-footer">
+            Nao tem conta? <a href="{{ url_for('auth.register') }}">Crie uma agora</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
