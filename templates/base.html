@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Keyflow — Cofre de senhas colaborativo para pequenas equipes. Compartilhe credenciais com seguranca, controle de acesso e log de auditoria.">
+    <meta name="theme-color" content="#7c3aed">
+    <title>{% block title %}Keyflow{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body>
+    {% include 'icons.html' %}
+
+    {# Skip link for keyboard navigation (P1 accessibility) #}
+    <a href="#main-content" class="skip-link">Pular para o conteudo principal</a>
+
+    {% if current_user.is_authenticated %}
+    <nav class="navbar" role="navigation" aria-label="Navegacao principal">
+        <div class="nav-container">
+            <a href="{{ url_for('main.dashboard') }}" class="nav-brand" aria-label="Keyflow - Voltar ao dashboard">
+                <span class="brand-key">key</span><span class="brand-flow">flow</span>
+            </a>
+            <div class="nav-links" role="menubar">
+                <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" role="menuitem">
+                    <svg class="icon icon-nav"><use href="#icon-home"/></svg> Dashboard
+                </a>
+                <a href="{{ url_for('main.vault') }}" class="nav-link {% if 'vault' in request.endpoint or 'credential' in request.endpoint %}active{% endif %}" role="menuitem">
+                    <svg class="icon icon-nav"><use href="#icon-lock"/></svg> Cofre
+                </a>
+                <a href="{{ url_for('main.members') }}" class="nav-link {% if 'member' in request.endpoint %}active{% endif %}" role="menuitem">
+                    <svg class="icon icon-nav"><use href="#icon-users"/></svg> Membros
+                </a>
+                <a href="{{ url_for('main.logs') }}" class="nav-link {% if request.endpoint == 'main.logs' %}active{% endif %}" role="menuitem">
+                    <svg class="icon icon-nav"><use href="#icon-clipboard"/></svg> Logs
+                </a>
+            </div>
+            <div class="nav-user">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema claro/escuro" title="Alternar tema">
+                    <svg class="icon" id="theme-icon-svg"><use href="#icon-moon"/></svg>
+                </button>
+                <a href="{{ url_for('main.profile') }}" class="user-name" title="Meu perfil">
+                    <svg class="icon icon-sm"><use href="#icon-user"/></svg>
+                    {{ current_user.name }}
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-outline" aria-label="Sair da conta">
+                    <svg class="icon icon-sm"><use href="#icon-log-out"/></svg> Sair
+                </a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="container" role="main" id="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages" aria-live="polite">
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}" role="alert">
+                {% if category == 'success' %}<svg class="icon icon-sm"><use href="#icon-check"/></svg>{% endif %}
+                {% if category == 'error' %}<svg class="icon icon-sm"><use href="#icon-alert-triangle"/></svg>{% endif %}
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
