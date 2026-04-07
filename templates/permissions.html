@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Permissoes — {{ cred.name }} — Keyflow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Permissoes: {{ cred.name }}</h1>
+    <a href="{{ url_for('main.vault') }}" class="btn btn-outline">Voltar ao cofre</a>
+</div>
+
+<div class="form-container">
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Membro</th>
+                    <th>Permissao</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                {% if member.id != cred.created_by %}
+                <tr>
+                    <td>
+                        <span class="member-avatar-sm">{{ member.name[0] | upper }}</span>
+                        {{ member.name }}
+                    </td>
+                    <td>
+                        {% set perm = perms.get(member.id) %}
+                        <select name="perm_{{ member.id }}" class="form-select">
+                            <option value="none" {{ 'selected' if not perm }}>Sem acesso</option>
+                            <option value="use" {{ 'selected' if perm and not perm.can_view_password }}>Pode usar (sem ver senha)</option>
+                            <option value="view" {{ 'selected' if perm and perm.can_view_password }}>Pode ver a senha</option>
+                        </select>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td>
+                        <span class="member-avatar-sm">{{ member.name[0] | upper }}</span>
+                        {{ member.name }} <span class="badge badge-admin">Criador</span>
+                    </td>
+                    <td>Acesso total</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Salvar permissoes</button>
+            <a href="{{ url_for('main.vault') }}" class="btn btn-outline">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

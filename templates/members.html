@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Membros — Keyflow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Membros da Equipe</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Convidar novo membro</h2>
+    </div>
+    <div class="card-body">
+        <p>Compartilhe este codigo de convite para novos membros se cadastrarem na sua organizacao:</p>
+        <div class="invite-code-box">
+            <span class="invite-code" id="invite-code">{{ org.invite_code }}</span>
+            <button class="btn btn-sm btn-outline" onclick="copyText('{{ org.invite_code }}')">Copiar</button>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>{{ members | length }} membros</h2>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Funcao</th>
+                    <th>Status</th>
+                    {% if current_user.role == 'admin' %}
+                    <th>Acoes</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr class="{{ 'row-removed' if not member.is_active_member }}">
+                    <td>
+                        <span class="member-avatar-sm">{{ member.name[0] | upper }}</span>
+                        {{ member.name }}
+                    </td>
+                    <td>{{ member.email }}</td>
+                    <td>
+                        {% if member.role == 'admin' %}
+                        <span class="badge badge-admin">Admin</span>
+                        {% else %}
+                        <span class="badge">Membro</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="status-dot {% if member.is_active_member %}status-active{% else %}status-removed{% endif %}"></span>
+                        {{ 'Ativo' if member.is_active_member else 'Removido' }}
+                    </td>
+                    {% if current_user.role == 'admin' %}
+                    <td>
+                        {% if member.id != current_user.id %}
+                            {% if member.is_active_member %}
+                            <form method="POST" action="{{ url_for('main.member_remove', user_id=member.id) }}" class="inline-form" onsubmit="return confirm('Remover {{ member.name }} da organizacao?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+                            </form>
+                            {% else %}
+                            <form method="POST" action="{{ url_for('main.member_reactivate', user_id=member.id) }}" class="inline-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline">Reativar</button>
+                            </form>
+                            {% endif %}
+                        {% else %}
+                        <span class="text-muted">Voce</span>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

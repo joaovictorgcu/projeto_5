@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Logs de Acesso — Keyflow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Log de Acessos</h1>
+    <div class="export-actions">
+        <a href="{{ url_for('main.logs_export') }}" class="btn btn-outline" title="Exportar para CSV">
+            <svg class="icon icon-sm"><use href="#icon-download"/></svg> Exportar CSV
+        </a>
+    </div>
+</div>
+<p class="text-muted" style="margin-top:-1.5rem;margin-bottom:1.5rem;">Registro automatico de quem acessou qual credencial e quando — compliance LGPD</p>
+
+<div class="card">
+    <div class="card-body">
+        {% if logs %}
+        <table class="table" role="table">
+            <thead>
+                <tr>
+                    <th scope="col">Data / Hora</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Credencial</th>
+                    <th scope="col">Acao</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.accessed_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                    <td>
+                        <span class="member-avatar-sm">{{ log.user.name[0] | upper }}</span>
+                        {{ log.user.name }}
+                    </td>
+                    <td>{{ log.credential.name }}</td>
+                    <td><span class="badge badge-{{ log.action.split()[0] }}">{{ log.action }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state-container">
+            <div class="empty-icon"><svg class="icon-xl"><use href="#icon-clipboard"/></svg></div>
+            <h2>Nenhum acesso registrado</h2>
+            <p>Os logs aparecerao aqui quando credenciais forem acessadas.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

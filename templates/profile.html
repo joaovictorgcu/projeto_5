@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Perfil — Keyflow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Meu Perfil</h1>
+</div>
+
+<div class="profile-header">
+    <div class="profile-avatar">{{ current_user.name[0] | upper }}</div>
+    <div class="profile-info">
+        <h2>{{ current_user.name }}</h2>
+        <p>{{ current_user.email }}</p>
+        <p>
+            {% if current_user.role == 'admin' %}
+            <span class="badge badge-admin">Administrador</span>
+            {% else %}
+            <span class="badge">Membro</span>
+            {% endif %}
+            {% if current_user.organization %}
+            &middot; {{ current_user.organization.name }}
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="form-container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Alterar dados</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" name="name" value="{{ current_user.name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" value="{{ current_user.email }}" disabled>
+                    <small class="form-hint">O e-mail nao pode ser alterado.</small>
+                </div>
+
+                <hr class="form-divider">
+
+                <h3 style="font-size:0.95rem;margin-bottom:1rem;color:var(--text-primary)">Alterar senha</h3>
+
+                <div class="form-group">
+                    <label for="current_password">Senha atual</label>
+                    <input type="password" id="current_password" name="current_password" placeholder="Necessario para alterar a senha">
+                </div>
+
+                <div class="form-group">
+                    <label for="new_password">Nova senha</label>
+                    <input type="password" id="new_password" name="new_password" placeholder="Minimo 6 caracteres">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Salvar alteracoes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if current_user.organization %}
+    <div class="card">
+        <div class="card-header">
+            <h2>Organizacao</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Nome:</strong> {{ current_user.organization.name }}</p>
+            <p><strong>Codigo de convite:</strong>
+                <span class="invite-code" style="font-size:1rem;">{{ current_user.organization.invite_code }}</span>
+                <button class="btn btn-sm btn-outline" onclick="copyText('{{ current_user.organization.invite_code }}')">Copiar</button>
+            </p>
+            <p><strong>Membro desde:</strong> {{ current_user.created_at.strftime('%d/%m/%Y') }}</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
