@@ -1443,6 +1443,290 @@ select:focus-visible {
     opacity: 0.6;
 }
 
+/* ─── Problem Grid ──────────────────────────────────────────── */
+.problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.problem-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.problem-number {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background: var(--red-500);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.problem-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ─── Solution Grid ─────────────────────────────────────────── */
+.solution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.solution-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition);
+}
+.solution-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--purple-200);
+}
+
+.solution-card .icon-feature {
+    min-width: 40px;
+    margin-top: 2px;
+}
+
+.solution-card h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+}
+
+.solution-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* ─── Comparison Table ──────────────────────────────────────── */
+.comparison-table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 580px;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 0.85rem 1.25rem;
+    text-align: left;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.comparison-table thead th {
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    background: var(--bg);
+}
+
+.comparison-table th:first-child {
+    color: var(--text-primary);
+}
+
+.compare-bad {
+    color: var(--red-500);
+}
+.compare-mid {
+    color: var(--yellow-500);
+}
+.compare-good {
+    color: var(--green-500);
+    font-weight: 600;
+}
+
+.comparison-table thead .compare-good {
+    background: rgba(34, 197, 94, 0.06);
+    color: var(--green-600);
+}
+
+.comparison-table tbody .compare-good {
+    background: rgba(34, 197, 94, 0.04);
+}
+
+/* ─── Security Grid ─────────────────────────────────────────── */
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.security-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+}
+
+.security-item .icon-feature {
+    min-width: 40px;
+    color: var(--purple-400);
+    margin-top: 2px;
+}
+
+.security-item h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+}
+
+.security-item p {
+    font-size: 0.825rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* ─── Audience Grid ─────────────────────────────────────────── */
+.audience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+}
+
+.audience-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    transition: all var(--transition);
+}
+.audience-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.audience-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--purple-600);
+    margin-bottom: 0.5rem;
+}
+
+.audience-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* ─── FAQ ────────────────────────────────────────────────────── */
+.faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    transition: all var(--transition);
+}
+
+.faq-item[open] {
+    box-shadow: var(--shadow-md);
+    border-color: var(--purple-200);
+}
+
+.faq-item summary {
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background var(--transition);
+}
+
+.faq-item summary:hover {
+    background: var(--purple-50);
+}
+
+.faq-item summary::after {
+    content: '+';
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--purple-500);
+    transition: transform var(--transition);
+}
+
+.faq-item[open] summary::after {
+    transform: rotate(45deg);
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item p {
+    padding: 0 1.25rem 1.25rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* ─── Hero Trust Line ───────────────────────────────────────── */
+.hero-trust {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 1.25rem;
+    position: relative;
+    letter-spacing: 0.3px;
+}
+
+/* ─── Footer Links ──────────────────────────────────────────── */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.footer-links span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.75rem;
+    border-radius: 100px;
+}
+
 /* ─── Features Grid ─────────────────────────────────────────── */
 .features-grid {
     display: grid;

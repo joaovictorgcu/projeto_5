@@ -1,101 +1,248 @@
 # Keyflow
 
-Cofre de senhas colaborativo para pequenas equipes. Compartilhe credenciais com seguranca, controle de acesso por membro e log completo de auditoria.
+**Cofre de Senhas Colaborativo para Pequenas Equipes**
 
-## Funcionalidades
+O Keyflow e uma plataforma web de compartilhamento seguro de senhas para agencias digitais, startups e PMEs com 3 a 50 pessoas. O produto resolve um problema cotidiano e critico: equipes compartilham credenciais de redes sociais, ferramentas SaaS e contas bancarias por WhatsApp e planilhas, expondo a empresa a vazamentos, invasoes e multas da LGPD.
 
-- **Cofre de credenciais** — armazene logins e senhas com criptografia AES (Fernet/PBKDF2) em repouso
-- **Organizacoes e convites** — crie uma organizacao ou entre em uma existente via codigo de convite
-- **Controle de acesso** — defina quem pode visualizar cada senha (dono, acesso mascarado ou acesso total)
-- **Papeis** — administradores gerenciam membros; membros acessam credenciais conforme permissoes
-- **Log de auditoria** — todas as acoes (criar, editar, deletar, visualizar senha) sao registradas com usuario, credencial e timestamp
-- **Exportacao CSV** — exporte o historico de logs em formato CSV
-- **Health Score** — painel com pontuacao de saude das senhas (tamanho, complexidade, duplicatas)
-- **Busca no cofre** — filtre credenciais por nome ou login
-- **Perfil** — altere nome e senha da conta
-- **Tema claro/escuro** — alternancia de tema na interface
-- **Protecao CSRF** — todas as rotas protegidas contra Cross-Site Request Forgery
-- **Landing page** — pagina inicial publica com apresentacao do produto
+> Projeto Academico — Ciencia da Computacao — 4o Periodo — CESAR School — 2026
 
-## Tecnologias
+---
 
-| Camada       | Tecnologia                          |
-|--------------|-------------------------------------|
-| Backend      | Python 3.13, Flask 3.1              |
-| Banco de dados | SQLite (dev) / PostgreSQL (prod) |
-| ORM          | Flask-SQLAlchemy                    |
-| Autenticacao | Flask-Login, bcrypt                 |
-| Criptografia | cryptography (Fernet + PBKDF2)     |
-| Frontend     | HTML, CSS, JavaScript (vanilla)     |
-| Deploy       | Render (Gunicorn)                   |
+## Funcionalidades do MVP
 
-## Estrutura do projeto
+### Autenticacao
+- Cadastro com nome, e-mail e senha
+- Login/logout com sessao segura (Flask-Login)
+- Hash de senhas com bcrypt + salt
+- Isolamento por organizacao (cada usuario so ve dados da sua org)
 
-```
-├── app.py                 # Factory da aplicacao Flask
-├── config.py              # Configuracoes (env vars)
-├── models.py              # Modelos SQLAlchemy (Organization, User, Credential, etc.)
-├── routes.py              # Blueprints de rotas (auth + main)
-├── crypto_utils.py        # Criptografia Fernet para senhas armazenadas
-├── schema.sql             # Schema SQL de referencia
-├── requirements.txt       # Dependencias Python
-├── Procfile               # Comando de start (Gunicorn)
-├── render.yaml            # Configuracao de deploy no Render
-├── runtime.txt            # Versao do Python
-├── static/                # CSS, JS, favicon
-└── templates/             # Templates Jinja2
-    ├── base.html
-    ├── landing.html
-    ├── login.html
-    ├── register.html
-    ├── dashboard.html
-    ├── vault.html
-    ├── credential_form.html
-    ├── permissions.html
-    ├── members.html
-    ├── logs.html
-    ├── profile.html
-    └── errors/
-```
+### Cofre de Senhas
+- Cadastrar credencial: nome do servico, login, senha criptografada, observacoes
+- Listar, editar e deletar credenciais
+- Campo de senha oculto por padrao com botao revelar/ocultar
+- Copiar login ou senha com um clique
+- Busca por nome ou login
+- Auto-ocultar senha apos 30 segundos
 
-## Como rodar localmente
+### Gerador de Senhas
+- Tamanho configuravel de 8 a 32 caracteres
+- Opcoes: maiusculas, minusculas, numeros, simbolos
+- Gerado com `crypto.getRandomValues()` (criptograficamente seguro)
+- Indicador de forca em tempo real (Muito fraca → Forte)
+
+### Compartilhamento
+- Convite de membros por codigo unico da organizacao
+- Permissao por credencial: "pode ver a senha" ou "so pode usar sem ver" (mascarado)
+- Revogar acesso de um membro com um clique
+
+### Log de Auditoria (LGPD)
+- Registro automatico: quem acessou qual credencial, qual acao e quando
+- Tela de auditoria com lista cronologica
+- Exportacao em CSV (Data, Usuario, E-mail, Credencial, Acao)
+
+### Dashboard
+- Numero de credenciais e membros ativos
+- Codigo de convite da organizacao
+- Health Score de senhas (analisa fracas, curtas, pouco complexas, duplicadas)
+- Ultimos 10 acessos com usuario, credencial e acao
+
+### Outros
+- Dark mode com persistencia (localStorage)
+- Pagina de perfil (alterar nome e senha)
+- Paginas de erro 404 e 500 estilizadas
+- Sistema de icones SVG inline (25+ icones Lucide)
+- Skip-link e ARIA labels para acessibilidade
+- Responsivo (mobile-first)
+
+---
+
+## Stack Tecnologica
+
+| Camada | Tecnologia | Por que |
+|--------|-----------|---------|
+| Frontend | HTML + CSS + JavaScript puro | Equipe ja domina; sem necessidade de framework |
+| Backend | Python 3.13 + Flask 3.1 | Familiar para a equipe; direto para criar APIs REST |
+| ORM | Flask-SQLAlchemy | Abstrai SQL; facilita migracao SQLite → PostgreSQL |
+| Banco de dados | SQLite (dev) / PostgreSQL (prod) | SQL ja e dominio da equipe |
+| Autenticacao | Flask-Login + bcrypt | Sessoes seguras; padrao da industria para hash |
+| Criptografia (cofre) | Fernet (AES-128-CBC via PBKDF2) | Criptografia simetrica; facil de usar |
+| Protecao CSRF | Flask-WTF | Nativo do Flask; protege todos os formularios |
+| Icons | SVG inline (Lucide) | Escalavel, tematizavel, sem emojis |
+| Deploy | Render / Railway + Gunicorn | Deploy via GitHub sem custo; HTTPS gratuito |
+
+---
+
+## Como Rodar Localmente
 
 ```bash
 # 1. Clone o repositorio
-git clone <https://github.com/joaovictorgcu/projeto_5>
+git clone https://github.com/joaovictorgcu/projeto_5
 cd PROJETO_5
 
-# 2. Crie e ative o ambiente virtual
+# 2. Crie o ambiente virtual
 python -m venv venv
-source venv/bin/activate        # Linux/Mac
-venv\Scripts\activate           # Windows
 
-# 3. Instale as dependencias
+# 3. Ative (Windows)
+source venv/Scripts/activate
+# Linux/Mac: source venv/bin/activate
+
+# 4. Instale as dependencias
 pip install -r requirements.txt
 
-# 4. Configure as variaveis de ambiente (opcional)
-# Crie um arquivo .env na raiz:
-#   SECRET_KEY=sua-chave-secreta
-#   DATABASE_URL=sqlite:///keyflow.db
+# 5. Configure variaveis de ambiente
+cp .env.example .env
+# Edite o .env com sua SECRET_KEY
 
-# 5. Rode a aplicacao
+# 6. Rode a aplicacao
 python app.py
 ```
 
-A aplicacao estara disponivel em `http://localhost:5000`.
+Acesse `http://127.0.0.1:5000`
 
-## Deploy
+---
 
-O projeto esta configurado para deploy no **Render** com PostgreSQL. O arquivo `render.yaml` define o servico web e o banco de dados. As variaveis `SECRET_KEY` e `DATABASE_URL` sao configuradas automaticamente.
+## Estrutura do Projeto
 
-## Modelo de dados
+```
+PROJETO_5/
+├── app.py                    # Factory Flask + error handlers
+├── config.py                 # Configuracao via .env
+├── models.py                 # 5 modelos SQLAlchemy
+├── routes.py                 # 15+ endpoints (auth + main)
+├── crypto_utils.py           # Criptografia Fernet para cofre
+├── schema.sql                # Schema SQL de referencia
+├── requirements.txt          # Dependencias Python
+├── Procfile                  # Deploy (Gunicorn)
+├── render.yaml               # Blueprint Render + PostgreSQL
+├── runtime.txt               # Versao Python
+├── .env.example              # Exemplo de variaveis de ambiente
+├── .gitignore
+│
+├── static/
+│   ├── style.css             # Design system (~1400 linhas)
+│   ├── main.js               # Dark mode, reveal, gerador, toast
+│   └── favicon.svg           # Favicon SVG (cadeado roxo)
+│
+└── templates/
+    ├── base.html             # Layout: navbar, icons, skip-link, ARIA
+    ├── icons.html            # 25+ icones SVG Lucide inline
+    ├── landing.html          # Landing page completa (12 secoes)
+    ├── login.html            # Tela de login
+    ├── register.html         # Cadastro + convite
+    ├── dashboard.html        # Dashboard + Health Score
+    ├── vault.html            # Cofre com busca
+    ├── credential_form.html  # Form + gerador de senhas
+    ├── permissions.html      # Permissoes por credencial
+    ├── members.html          # Gerenciamento de membros
+    ├── logs.html             # Logs + export CSV
+    ├── profile.html          # Perfil do usuario
+    └── errors/
+        ├── 404.html
+        └── 500.html
+```
 
-- **Organization** — grupo/equipe com codigo de convite unico
-- **User** — membro com papel (admin/member) vinculado a uma organizacao
-- **Credential** — login + senha criptografada pertencente a uma organizacao
-- **CredentialPermission** — controle granular de quem pode ver cada senha
-- **AccessLog** — registro de auditoria de todas as acoes sobre credenciais
+---
+
+## Modelo de Dados
+
+```
+organizations ──── users ──── access_logs
+      │                │
+      └── credentials ─┴── credential_permissions
+```
+
+| Tabela | Campos Principais | Relacao |
+|--------|-------------------|---------|
+| `organizations` | id, name, invite_code, created_at | Tem muitos users e credentials |
+| `users` | id, name, email, password_hash, org_id, role | Pertence a uma organization |
+| `credentials` | id, org_id, name, login, encrypted_password, notes, created_by | Pertence a uma organization |
+| `credential_permissions` | id, credential_id, user_id, can_view_password | Referencia credential e user |
+| `access_logs` | id, user_id, credential_id, action, accessed_at | Referencia user e credential |
+
+---
+
+## Seguranca
+
+Estas praticas nao sao opcionais — seguranca e a proposta central do Keyflow:
+
+| Pratica | Implementacao |
+|---------|---------------|
+| Senha de login | bcrypt com salt (nunca texto puro) |
+| Senhas do cofre | Fernet (AES-128-CBC) via PBKDF2 com 480.000 iteracoes |
+| CSRF | Flask-WTF com token em toda requisicao POST |
+| Isolamento | Verificacao de org_id em toda query |
+| Variaveis sensiveis | .env (nunca no codigo-fonte) |
+| HTTPS | Obrigatorio em producao (Render/Railway) |
+| Sessoes | Flask-Login com cookie seguro |
+| Validacao | Backend valida todos os dados (nunca confia so no frontend) |
+
+---
+
+## Deploy em Producao
+
+O projeto inclui configuracao pronta:
+
+- `Procfile` — `gunicorn app:app --bind 0.0.0.0:$PORT`
+- `render.yaml` — Web service + PostgreSQL free tier
+- `runtime.txt` — Python 3.13.2
+
+Para usar PostgreSQL, configure no `.env`:
+```
+DATABASE_URL=postgresql://usuario:senha@host:5432/keyflow
+```
+
+---
+
+## API Endpoints
+
+| Metodo | Rota | Descricao |
+|--------|------|-----------|
+| GET | `/` | Landing page |
+| GET/POST | `/register` | Cadastro |
+| GET/POST | `/login` | Login |
+| GET | `/logout` | Logout |
+| GET | `/dashboard` | Dashboard |
+| GET | `/vault` | Cofre de senhas |
+| GET | `/vault/search?q=` | Busca no cofre |
+| GET/POST | `/vault/new` | Nova credencial |
+| GET/POST | `/vault/<id>/edit` | Editar credencial |
+| POST | `/vault/<id>/delete` | Deletar credencial |
+| POST | `/vault/<id>/reveal` | Revelar senha (JSON) |
+| GET/POST | `/vault/<id>/permissions` | Permissoes |
+| GET | `/members` | Lista de membros |
+| POST | `/members/<id>/remove` | Remover membro |
+| POST | `/members/<id>/reactivate` | Reativar membro |
+| GET | `/logs` | Logs de auditoria |
+| GET | `/logs/export` | Exportar CSV |
+| GET/POST | `/profile` | Perfil do usuario |
+| GET | `/api/health-score` | Health Score (JSON) |
+
+---
+
+## Analise de Mercado
+
+- Mercado global de gerenciamento de senhas: **~$3.5B** (2025), crescendo **~19% ao ano**
+- 70% da receita concentrada no enterprise — PMEs sao o nicho menos atendido
+- Brasil representa **45% do mercado** da America Latina em ciberseguranca
+- Nenhum player atual combina: interface simples + compartilhamento mascarado + LGPD + preco acessivel
+
+---
+
+## Equipe
+
+12 integrantes organizados em 6 duplas:
+
+| Dupla | Area | Foco Tecnico |
+|-------|------|-------------|
+| 1 — Produto & Pesquisa | Entrevistas, personas, validacao | Pesquisa qualitativa, Figma |
+| 2 — Design & Prototipo | Wireframes, UI, identidade visual | Figma, CSS, HTML |
+| 3 — Backend: Auth | Cadastro, login, sessoes, hash | Python, Flask, bcrypt |
+| 4 — Backend: Cofre | CRUD credenciais, permissoes, cripto | Python, Flask, SQL |
+| 5 — Backend: Logs & Org | Logs, membros, remocao de acesso | Python, Flask, SQL |
+| 6 — Pitch & Documento | Documento estrategico, slides, metricas | Storytelling, dados |
+
+---
 
 ## Licenca
 
-Projeto academico dos alunos do 5º Período da CESAR School.
+Projeto academico dos alunos do 4o Periodo da CESAR School — Ciencia da Computacao — 2026.

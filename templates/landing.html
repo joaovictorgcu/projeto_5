@@ -10,71 +10,133 @@
             <p class="hero-subtitle">Cofre de Senhas Colaborativo para Pequenas Equipes</p>
             <p class="hero-desc">
                 Para de mandar senha pelo WhatsApp. Compartilhe credenciais com sua equipe
-                de forma segura, com controle de acesso e log de auditoria.
+                de forma segura, com controle de acesso e log de auditoria — tudo em conformidade com a LGPD.
             </p>
             <div class="hero-actions">
                 <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Criar conta gratis</a>
                 <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-lg">Entrar</a>
             </div>
+            <p class="hero-trust">Sem cartao de credito. Pronto em 2 minutos. Dados criptografados.</p>
         </div>
+    </section>
+
+    <!-- O Problema -->
+    <section class="landing-section">
+        <h2 class="section-title">O problema que ninguem resolve</h2>
+        <p class="section-subtitle">Em agencias digitais e pequenas empresas, o ciclo se repete todos os dias:</p>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-number">1</div>
+                <p>Alguem cria uma conta em uma ferramenta nova</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-number">2</div>
+                <p>Manda a senha pelo <strong>WhatsApp</strong> para o time</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-number">3</div>
+                <p>Varios membros copiam para o celular pessoal</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-number">4</div>
+                <p>Alguem sai da empresa e <strong>ninguem sabe revogar</strong> o acesso</p>
+            </div>
+        </div>
+        <p class="section-subtitle" style="margin-top:2rem;">Resultado: vazamentos, invasoes e multas da LGPD.</p>
     </section>
 
     <!-- Numeros do problema -->
     <section class="landing-section">
-        <h2 class="section-title">Por que voce precisa do Keyflow</h2>
+        <h2 class="section-title">Os numeros nao mentem</h2>
         <div class="stats-grid stats-highlight">
             <div class="stat-card stat-danger">
                 <div class="stat-number">80%</div>
-                <div class="stat-label">das violacoes envolvem senhas fracas ou compartilhadas</div>
+                <div class="stat-label">das violacoes de dados envolvem senhas fracas ou compartilhadas indevidamente</div>
             </div>
             <div class="stat-card stat-danger">
                 <div class="stat-number">74%</div>
-                <div class="stat-label">das violacoes globais envolvem credenciais roubadas</div>
+                <div class="stat-label">das violacoes globais em 2025 envolvem credenciais roubadas ou vazadas</div>
             </div>
             <div class="stat-card stat-danger">
                 <div class="stat-number">64%</div>
-                <div class="stat-label">dos funcionarios reutilizam senhas corporativas</div>
+                <div class="stat-label">dos funcionarios reutilizam a mesma senha entre contas corporativas</div>
             </div>
             <div class="stat-card stat-danger">
                 <div class="stat-number">R$50M</div>
-                <div class="stat-label">multa maxima da LGPD por infracao</div>
+                <div class="stat-label">multa maxima por infracao da LGPD (2% do faturamento)</div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
+    <!-- A Solucao -->
+    <section class="landing-section">
+        <h2 class="section-title">Keyflow: a solucao simples</h2>
+        <p class="section-subtitle">Nenhum player atual combina tudo isso em uma unica plataforma acessivel.</p>
+        <div class="solution-grid">
+            <div class="solution-card">
+                <svg class="icon-feature"><use href="#icon-lock"/></svg>
+                <div>
+                    <h3>Interface simples para nao-tecnicos</h3>
+                    <p>Seus gestores e estagiarios conseguem usar sem treinamento. Sem jargao tecnico.</p>
+                </div>
+            </div>
+            <div class="solution-card">
+                <svg class="icon-feature"><use href="#icon-eye-off"/></svg>
+                <div>
+                    <h3>Compartilhamento sem expor a senha</h3>
+                    <p>Membros podem usar credenciais sem nunca ver a senha real. Voce decide quem ve o que.</p>
+                </div>
+            </div>
+            <div class="solution-card">
+                <svg class="icon-feature"><use href="#icon-shield-check"/></svg>
+                <div>
+                    <h3>Conformidade com a LGPD</h3>
+                    <p>Log de auditoria automatico, exportavel em CSV. Prove quem acessou o que em qualquer auditoria.</p>
+                </div>
+            </div>
+            <div class="solution-card">
+                <svg class="icon-feature"><use href="#icon-zap"/></svg>
+                <div>
+                    <h3>Preco acessivel para o mercado brasileiro</h3>
+                    <p>A partir de R$ 49/mes para equipes de ate 5 pessoas. Sem surpresas na fatura.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features detalhadas -->
     <section class="landing-section">
         <h2 class="section-title">Tudo que sua equipe precisa</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon"><svg class="icon-feature"><use href="#icon-lock"/></svg></div>
                 <h3>Cofre Seguro</h3>
-                <p>Senhas criptografadas com padrao da industria. Nunca armazenadas em texto puro.</p>
+                <p>Senhas criptografadas com Fernet (AES-128-CBC). Hash de contas com bcrypt + salt. Nunca armazenadas em texto puro.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><svg class="icon-feature"><use href="#icon-users"/></svg></div>
                 <h3>Compartilhamento Controlado</h3>
-                <p>Defina quem pode ver a senha e quem so pode usar sem ver. Revogue acesso com um clique.</p>
+                <p>Defina por credencial: quem pode ver a senha e quem so pode usar sem ver. Revogue acesso com um unico clique.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><svg class="icon-feature"><use href="#icon-clipboard"/></svg></div>
                 <h3>Log de Auditoria</h3>
-                <p>Saiba quem acessou qual credencial e quando. Pronto para qualquer auditoria LGPD.</p>
+                <p>Registro automatico de cada acesso: quem, o que e quando. Exportavel em CSV para auditorias LGPD.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><svg class="icon-feature"><use href="#icon-zap"/></svg></div>
                 <h3>Simples de Usar</h3>
-                <p>Interface feita para gestores, nao para tecnicos. Funciona em 5 minutos.</p>
+                <p>Interface projetada para gestores, nao para tecnicos. Sua equipe esta pronta em menos de 5 minutos.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><svg class="icon-feature"><use href="#icon-user-x"/></svg></div>
                 <h3>Offboarding Seguro</h3>
-                <p>Quando alguem sai da equipe, revogue todos os acessos em 10 segundos.</p>
+                <p>Quando alguem sai da equipe, desative com um clique. Sem precisar trocar todas as senhas uma a uma.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><svg class="icon-feature"><use href="#icon-wand"/></svg></div>
                 <h3>Gerador de Senhas</h3>
-                <p>Crie senhas fortes automaticamente com nosso gerador integrado ao cofre.</p>
+                <p>Crie senhas fortes de 8 a 32 caracteres com maiusculas, numeros e simbolos. Indicador de forca em tempo real.</p>
             </div>
         </div>
     </section>
@@ -82,27 +144,220 @@
     <!-- Como funciona -->
     <section class="landing-section">
         <h2 class="section-title">Como funciona</h2>
+        <p class="section-subtitle">4 passos para nunca mais mandar senha por WhatsApp.</p>
         <div class="steps-grid">
             <div class="step-card">
                 <div class="step-number">1</div>
                 <h3>Crie sua organizacao</h3>
-                <p>Cadastre-se e crie um espaco para sua equipe em menos de 1 minuto.</p>
+                <p>Cadastre-se com nome, e-mail e senha. Em 30 segundos, sua organizacao esta pronta com um codigo de convite unico.</p>
             </div>
             <div class="step-card">
                 <div class="step-number">2</div>
                 <h3>Convide sua equipe</h3>
-                <p>Compartilhe o codigo de convite e sua equipe entra com um clique.</p>
+                <p>Compartilhe o codigo de convite. Cada membro se cadastra e ja entra na sua organizacao automaticamente.</p>
             </div>
             <div class="step-card">
                 <div class="step-number">3</div>
                 <h3>Salve suas senhas</h3>
-                <p>Cadastre credenciais no cofre e defina quem pode ver cada uma.</p>
+                <p>Cadastre credenciais no cofre (servico, login, senha, notas). Use o gerador para criar senhas fortes.</p>
             </div>
             <div class="step-card">
                 <div class="step-number">4</div>
                 <h3>Controle total</h3>
-                <p>Acompanhe cada acesso no log de auditoria. Revogue quando quiser.</p>
+                <p>Defina permissoes por credencial, acompanhe cada acesso no log e exporte relatorios quando quiser.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Comparativo -->
+    <section class="landing-section">
+        <h2 class="section-title">Keyflow vs. o que voce usa hoje</h2>
+        <p class="section-subtitle">Veja como o Keyflow se compara com as alternativas do dia a dia.</p>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Funcionalidade</th>
+                        <th class="compare-bad">WhatsApp / Planilha</th>
+                        <th class="compare-mid">1Password / LastPass</th>
+                        <th class="compare-good">Keyflow</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Senhas criptografadas</td>
+                        <td class="compare-bad"><svg class="icon icon-sm"><use href="#icon-alert-triangle"/></svg> Nao</td>
+                        <td class="compare-mid"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Sim</td>
+                        <td class="compare-good"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Sim</td>
+                    </tr>
+                    <tr>
+                        <td>Compartilhamento mascarado</td>
+                        <td class="compare-bad"><svg class="icon icon-sm"><use href="#icon-alert-triangle"/></svg> Nao</td>
+                        <td class="compare-mid"><svg class="icon icon-sm"><use href="#icon-alert-triangle"/></svg> Parcial</td>
+                        <td class="compare-good"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Sim</td>
+                    </tr>
+                    <tr>
+                        <td>Log de auditoria LGPD</td>
+                        <td class="compare-bad"><svg class="icon icon-sm"><use href="#icon-alert-triangle"/></svg> Nao</td>
+                        <td class="compare-mid"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Pago</td>
+                        <td class="compare-good"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Incluso</td>
+                    </tr>
+                    <tr>
+                        <td>Interface para nao-tecnicos</td>
+                        <td class="compare-bad"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Sim</td>
+                        <td class="compare-mid"><svg class="icon icon-sm"><use href="#icon-alert-triangle"/></svg> Complexa</td>
+                        <td class="compare-good"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Sim</td>
+                    </tr>
+                    <tr>
+                        <td>Revogar acesso ao desligar</td>
+                        <td class="compare-bad"><svg class="icon icon-sm"><use href="#icon-alert-triangle"/></svg> Manual</td>
+                        <td class="compare-mid"><svg class="icon icon-sm"><use href="#icon-check"/></svg> Sim</td>
+                        <td class="compare-good"><svg class="icon icon-sm"><use href="#icon-check"/></svg> 1 clique</td>
+                    </tr>
+                    <tr>
+                        <td>Preco para 5 pessoas</td>
+                        <td class="compare-bad">Gratis</td>
+                        <td class="compare-mid">~R$100/mes</td>
+                        <td class="compare-good"><strong>R$49/mes</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Seguranca -->
+    <section class="landing-section">
+        <h2 class="section-title">Seguranca desde a primeira linha de codigo</h2>
+        <p class="section-subtitle">Seguranca nao e um recurso opcional — e a proposta central do Keyflow.</p>
+        <div class="security-grid">
+            <div class="security-item">
+                <svg class="icon-feature"><use href="#icon-shield-check"/></svg>
+                <div>
+                    <h4>Criptografia Fernet (AES-128-CBC)</h4>
+                    <p>Senhas do cofre criptografadas antes de serem armazenadas. Mesmo com acesso ao banco, os dados sao inuteis sem a chave.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <svg class="icon-feature"><use href="#icon-key"/></svg>
+                <div>
+                    <h4>Hash bcrypt com salt</h4>
+                    <p>Senhas de login dos usuarios nunca sao armazenadas em texto puro. Usamos bcrypt, o padrao da industria.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <svg class="icon-feature"><use href="#icon-shield"/></svg>
+                <div>
+                    <h4>Protecao CSRF</h4>
+                    <p>Todas as acoes protegidas contra Cross-Site Request Forgery via tokens Flask-WTF.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <svg class="icon-feature"><use href="#icon-lock"/></svg>
+                <div>
+                    <h4>Isolamento por organizacao</h4>
+                    <p>Cada usuario so acessa dados da propria organizacao. Verificacao de org_id em toda query.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <svg class="icon-feature"><use href="#icon-clipboard"/></svg>
+                <div>
+                    <h4>Log completo de acessos</h4>
+                    <p>Cada visualizacao, edicao e exclusao e registrada automaticamente com data, hora e usuario.</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <svg class="icon-feature"><use href="#icon-eye-off"/></svg>
+                <div>
+                    <h4>HTTPS obrigatorio em producao</h4>
+                    <p>Deploy com HTTPS ativo via Render/Railway. Dados nunca trafegam sem criptografia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mercado -->
+    <section class="landing-section">
+        <h2 class="section-title">Um mercado de bilhoes</h2>
+        <p class="section-subtitle">Gerenciamento de senhas e um dos segmentos de maior crescimento em ciberseguranca.</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">~$3.5B</div>
+                <div class="stat-label">Mercado global de gerenciamento de senhas (2025)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">+19%</div>
+                <div class="stat-label">Crescimento anual (CAGR) ate 2033</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">$3.7B</div>
+                <div class="stat-label">Mercado de ciberseguranca no Brasil (2025)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">45%</div>
+                <div class="stat-label">Share do Brasil na America Latina</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publico-alvo -->
+    <section class="landing-section">
+        <h2 class="section-title">Para quem e o Keyflow?</h2>
+        <div class="audience-grid">
+            <div class="audience-card">
+                <h3>Agencias Digitais</h3>
+                <p>Gerenciam dezenas de contas de redes sociais e ferramentas de marketing para clientes diferentes. Estagiarios entram e saem o tempo todo.</p>
+            </div>
+            <div class="audience-card">
+                <h3>Startups (3-50 pessoas)</h3>
+                <p>Crescem rapido, contratam e desligam em ciclos curtos. Precisam de controle sem burocracia de TI enterprise.</p>
+            </div>
+            <div class="audience-card">
+                <h3>Pequenas Empresas / PMEs</h3>
+                <p>Nao tem departamento de TI. O dono ou gestor precisa resolver a seguranca de senhas de forma simples e barata.</p>
+            </div>
+            <div class="audience-card">
+                <h3>Escritorios e Consultorias</h3>
+                <p>Compartilham acessos a sistemas de clientes, bancos e portais do governo. Precisam de rastreabilidade e compliance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="landing-section">
+        <h2 class="section-title">Perguntas frequentes</h2>
+        <div class="faq-list">
+            <details class="faq-item">
+                <summary>O Keyflow e gratuito?</summary>
+                <p>Sim, o plano Free permite 1 usuario com cofre pessoal. Para compartilhar senhas com equipe, o plano Starter custa R$49/mes para ate 5 usuarios.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Minhas senhas ficam seguras?</summary>
+                <p>Sim. As senhas do cofre sao criptografadas com Fernet (AES-128-CBC) antes de serem armazenadas no banco de dados. Mesmo com acesso direto ao banco, os dados sao inuteis sem a chave de criptografia. Senhas de login usam bcrypt com salt.</p>
+            </details>
+            <details class="faq-item">
+                <summary>O que e "compartilhamento mascarado"?</summary>
+                <p>Voce pode dar acesso a uma credencial para um membro da equipe sem que ele veja a senha real. Ele pode usar a credencial (copiar para colar), mas o campo de senha fica oculto. Ideal para estagiarios e freelancers temporarios.</p>
+            </details>
+            <details class="faq-item">
+                <summary>O Keyflow ajuda com a LGPD?</summary>
+                <p>Sim. O log de auditoria registra automaticamente quem acessou qual credencial e quando. Voce pode exportar esses logs em CSV a qualquer momento para apresentar em auditorias ou investigacoes internas.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Posso revogar o acesso de alguem que saiu?</summary>
+                <p>Sim, com um clique. Na pagina de membros, basta clicar em "Remover" ao lado do nome. O membro perde acesso imediato a todas as credenciais da organizacao.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Qual tecnologia o Keyflow usa?</summary>
+                <p>Frontend em HTML, CSS e JavaScript puro. Backend em Python com Flask. Banco de dados SQLite (desenvolvimento) ou PostgreSQL (producao). Criptografia com bcrypt e Fernet. Deploy em Render ou Railway com HTTPS.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Preciso instalar algo?</summary>
+                <p>Nao. O Keyflow e 100% web. Funciona em qualquer navegador moderno (Chrome, Firefox, Safari, Edge) sem instalar nada.</p>
+            </details>
+            <details class="faq-item">
+                <summary>E um projeto academico ou um produto real?</summary>
+                <p>O Keyflow nasceu como projeto academico do 4o periodo de Ciencia da Computacao (2026), mas foi construido como um produto real: com stack de producao, seguranca de verdade e plano de negocios validado por pesquisa de mercado.</p>
+            </details>
         </div>
     </section>
 
@@ -120,6 +375,7 @@
                     <li>1 usuario</li>
                     <li>Cofre pessoal</li>
                     <li>Gerador de senhas</li>
+                    <li>Indicador de forca</li>
                 </ul>
                 <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-block">Comecar gratis</a>
             </div>
@@ -134,7 +390,9 @@
                     <li>Cofre compartilhado</li>
                     <li>Controle de permissoes</li>
                     <li>Log de auditoria</li>
+                    <li>Exportar logs CSV</li>
                     <li>Convite de membros</li>
+                    <li>Health Score de senhas</li>
                 </ul>
                 <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-block">Comecar agora</a>
             </div>
@@ -146,9 +404,10 @@
                 <ul class="pricing-features">
                     <li>Ate 15 usuarios</li>
                     <li>Tudo do Starter</li>
-                    <li>MFA centralizado</li>
+                    <li>MFA centralizado (TOTP)</li>
                     <li>Grupos de acesso</li>
                     <li>App mobile</li>
+                    <li>Notificacoes por e-mail</li>
                 </ul>
                 <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-block">Em breve</a>
             </div>
@@ -160,19 +419,21 @@
                 <ul class="pricing-features">
                     <li>Ate 50 usuarios</li>
                     <li>Tudo do Growth</li>
-                    <li>Relatorios LGPD</li>
+                    <li>Relatorios LGPD em PDF</li>
                     <li>SSO (Google/MS365)</li>
                     <li>Integracoes de RH</li>
+                    <li>Health Score avancado</li>
+                    <li>Deteccao de vazamentos</li>
                 </ul>
                 <a href="{{ url_for('auth.register') }}" class="btn btn-outline btn-block">Em breve</a>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
+    <!-- CTA Final -->
     <section class="cta">
-        <h2>Suas senhas estao seguras?</h2>
-        <p>Quando alguem sai da sua equipe, voce sabe revogar todos os acessos em 10 segundos?</p>
+        <h2>Pare de mandar senha pelo WhatsApp.</h2>
+        <p>Sua equipe merece seguranca de verdade. Crie sua conta em 2 minutos, convide seu time e tenha controle total sobre quem acessa o que.</p>
         <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Comece agora — e gratis</a>
     </section>
 
@@ -182,7 +443,13 @@
             <span class="brand-key">key</span><span class="brand-flow">flow</span>
         </div>
         <p>Cofre de Senhas Colaborativo para Pequenas Equipes</p>
-        <p class="footer-copy">Projeto Academico 2026 — Ciencia da Computacao — 4&ordm; Periodo</p>
+        <div class="footer-links">
+            <span>Criptografia Fernet + bcrypt</span>
+            <span>Compliance LGPD</span>
+            <span>100% Web</span>
+            <span>Dark Mode</span>
+        </div>
+        <p class="footer-copy">Projeto Academico 2026 — Ciencia da Computacao — 4&ordm; Periodo — 12 integrantes</p>
     </footer>
 </div>
 {% endblock %}
