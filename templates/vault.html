@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Cofre — Keyflow{% endblock %}
 
+{% set CATEGORIES = {
+    'rede_social': {'label': 'Rede Social', 'icon': 'icon-users', 'color': '#e1306c'},
+    'email': {'label': 'E-mail', 'icon': 'icon-mail', 'color': '#ea4335'},
+    'financeiro': {'label': 'Financeiro', 'icon': 'icon-dollar', 'color': '#22c55e'},
+    'cloud': {'label': 'Cloud / Dev', 'icon': 'icon-cloud', 'color': '#3b82f6'},
+    'comunicacao': {'label': 'Comunicação', 'icon': 'icon-message', 'color': '#7c3aed'},
+    'marketing': {'label': 'Marketing', 'icon': 'icon-megaphone', 'color': '#f97316'},
+    'outros': {'label': 'Outros', 'icon': 'icon-folder', 'color': '#78716c'}
+} %}
+
 {% block content %}
 <div class="page-header">
     <h1>Cofre de Senhas</h1>
@@ -15,6 +25,16 @@
     </div>
 </form>
 
+<!-- Filtro por categoria -->
+<div class="category-filters">
+    <button class="category-chip active" onclick="filterCategory('all')" data-category="all">Todos</button>
+    {% for key, cat in CATEGORIES.items() %}
+    <button class="category-chip" onclick="filterCategory('{{ key }}')" data-category="{{ key }}" style="--chip-color: {{ cat.color }}">
+        <svg class="icon icon-sm"><use href="#{{ cat.icon }}"/></svg> {{ cat.label }}
+    </button>
+    {% endfor %}
+</div>
+
 {% if search_query is defined and search_query %}
 <p class="text-muted" style="margin-bottom:1rem;">
     {{ credentials | length }} resultado(s) para "<strong>{{ search_query }}</strong>"
@@ -25,9 +45,15 @@
 {% if credentials %}
 <div class="credentials-grid">
     {% for cred in credentials %}
-    <div class="credential-card">
+    {% set cat = CATEGORIES.get(cred.category, CATEGORIES['outros']) %}
+    <div class="credential-card" data-category="{{ cred.category }}">
         <div class="credential-header">
-            <h3>{{ cred.name }}</h3>
+            <div class="credential-title">
+                <span class="category-icon" style="color: {{ cat.color }}">
+                    <svg class="icon"><use href="#{{ cat.icon }}"/></svg>
+                </span>
+                <h3>{{ cred.name }}</h3>
+            </div>
             <div class="credential-actions">
                 <a href="{{ url_for('main.credential_permissions', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Permissões" aria-label="Gerenciar permissões de {{ cred.name }}"><svg class="icon"><use href="#icon-users"/></svg></a>
                 <a href="{{ url_for('main.credential_edit', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Editar" aria-label="Editar {{ cred.name }}"><svg class="icon"><use href="#icon-edit"/></svg></a>
@@ -63,6 +89,9 @@
             {% endif %}
         </div>
         <div class="credential-footer">
+            <span class="category-badge" style="--chip-color: {{ cat.color }}">
+                <svg class="icon icon-sm"><use href="#{{ cat.icon }}"/></svg> {{ cat.label }}
+            </span>
             <small>Criada por {{ cred.creator.name }} em {{ cred.created_at.strftime('%d/%m/%Y') }}</small>
         </div>
     </div>
@@ -78,4 +107,23 @@
     {% endif %}
 </div>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+function filterCategory(cat) {
+    var chips = document.querySelectorAll('.category-chip');
+    chips.forEach(function(c) { c.classList.remove('active'); });
+    document.querySelector('[data-category="' + cat + '"]').classList.add('active');
+
+    var cards = document.querySelectorAll('.credential-card');
+    cards.forEach(function(card) {
+        if (cat === 'all' || card.getAttribute('data-category') === cat) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
 {% endblock %}

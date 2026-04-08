@@ -658,6 +658,73 @@ select:focus-visible {
     width: 100%;
 }
 
+/* ─── Category Filters ──────────────────────────────────────── */
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.category-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--bg-card);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.category-chip:hover {
+    border-color: var(--chip-color, var(--purple-400));
+    color: var(--chip-color, var(--purple-500));
+    background: rgba(0,0,0,0.02);
+}
+
+.category-chip.active {
+    background: var(--chip-color, var(--purple-500));
+    color: white;
+    border-color: var(--chip-color, var(--purple-500));
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.category-chip.active .icon {
+    color: white;
+}
+
+/* Category in credential cards */
+.credential-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.category-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--chip-color, var(--text-muted));
+    margin-right: 0.75rem;
+}
+
+.category-badge .icon {
+    color: var(--chip-color, var(--text-muted));
+}
+
 .search-icon {
     color: var(--text-muted);
     font-size: 1rem;
@@ -1977,6 +2044,77 @@ select:focus-visible {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1rem;
+}
+
+/* ─── MFA ───────────────────────────────────────────────────── */
+.mfa-steps {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.mfa-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.mfa-step h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.mfa-step p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.mfa-qr {
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.mfa-qr img {
+    border-radius: var(--radius);
+}
+
+.mfa-manual {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.mfa-secret {
+    display: inline-block;
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--purple-600);
+    background: var(--purple-50);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius);
+    letter-spacing: 2px;
+    margin: 0.5rem 0;
+}
+
+.mfa-input {
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: 8px;
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
 }
 
 /* ─── Error Pages ───────────────────────────────────────────── */
