@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Ativar MFA — Keyflow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Ativar Autenticação de Dois Fatores</h1>
+</div>
+
+<div class="form-container">
+    <div class="card">
+        <div class="card-body">
+            <div class="mfa-steps">
+                <div class="mfa-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h3>Escaneie o QR Code</h3>
+                        <p>Abra o <strong>Google Authenticator</strong> ou <strong>Authy</strong> no seu celular e escaneie o código abaixo.</p>
+                    </div>
+                </div>
+
+                <div class="mfa-qr">
+                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code para Google Authenticator" width="200" height="200">
+                </div>
+
+                <p class="mfa-manual">
+                    Não consegue escanear? Use este código manualmente: <br>
+                    <code class="mfa-secret">{{ secret }}</code>
+                    <button class="btn btn-sm btn-outline" onclick="copyText('{{ secret }}')" type="button">Copiar</button>
+                </p>
+
+                <div class="mfa-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h3>Digite o código de 6 dígitos</h3>
+                        <p>Insira o código que aparece no app para confirmar a ativação.</p>
+                    </div>
+                </div>
+
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="form-group">
+                        <input type="text" id="code" name="code" required
+                               placeholder="000000"
+                               maxlength="6" pattern="[0-9]{6}"
+                               autocomplete="one-time-code"
+                               class="mfa-input"
+                               inputmode="numeric">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Ativar MFA</button>
+                        <a href="{{ url_for('main.profile') }}" class="btn btn-outline">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

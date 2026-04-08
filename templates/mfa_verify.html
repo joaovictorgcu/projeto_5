@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Verificação MFA — Keyflow{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="auth-brand"><span class="brand-key">key</span><span class="brand-flow">flow</span></h1>
+            <h2>Verificação de dois fatores</h2>
+            <p class="auth-desc">Abra o Google Authenticator e digite o código de 6 dígitos.</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.login_mfa') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="form-group">
+                <label for="code">Código de verificação</label>
+                <div class="input-icon-wrapper">
+                    <svg class="input-icon"><use href="#icon-shield-check"/></svg>
+                    <input type="text" id="code" name="code" required
+                           placeholder="000000"
+                           maxlength="6" pattern="[0-9]{6}"
+                           autocomplete="one-time-code"
+                           inputmode="numeric"
+                           autofocus>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                Verificar
+            </button>
+        </form>
+
+        <p class="auth-footer">
+            <a href="{{ url_for('auth.login') }}">Voltar ao login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

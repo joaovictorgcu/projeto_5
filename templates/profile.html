@@ -65,6 +65,33 @@
         </div>
     </div>
 
+    <!-- MFA -->
+    <div class="card">
+        <div class="card-header">
+            <h2><svg class="icon icon-sm" style="margin-right:0.35rem"><use href="#icon-shield-check"/></svg> Autenticação de dois fatores</h2>
+        </div>
+        <div class="card-body">
+            {% if current_user.mfa_enabled %}
+            <p style="color:var(--green-500);font-weight:600;margin-bottom:1rem;">
+                <svg class="icon icon-sm"><use href="#icon-check"/></svg> MFA ativado
+            </p>
+            <form method="POST" action="{{ url_for('main.mfa_disable') }}" onsubmit="return confirm('Tem certeza que deseja desativar o MFA?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="mfa_code">Digite o código atual para desativar</label>
+                    <input type="text" id="mfa_code" name="code" placeholder="000000" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" required>
+                </div>
+                <button type="submit" class="btn btn-danger">Desativar MFA</button>
+            </form>
+            {% else %}
+            <p style="margin-bottom:1rem;">Proteja sua conta com um código de 6 dígitos do Google Authenticator ou Authy.</p>
+            <a href="{{ url_for('main.mfa_setup') }}" class="btn btn-primary">
+                <svg class="icon icon-sm"><use href="#icon-qr-code"/></svg> Ativar MFA
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
     {% if current_user.organization %}
     <div class="card">
         <div class="card-header">
