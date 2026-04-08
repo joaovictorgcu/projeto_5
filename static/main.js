@@ -336,3 +336,47 @@ document.addEventListener('DOMContentLoaded', function() {
         card.style.animationDelay = (i * 0.05) + 's';
     });
 });
+
+/* ─── Keyboard Shortcuts ────────────────────────────────────── */
+document.addEventListener('keydown', function(e) {
+    // Ignore when typing in input/textarea
+    var tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+    // Ctrl+K or / = focus search
+    if ((e.ctrlKey && e.key === 'k') || e.key === '/') {
+        e.preventDefault();
+        var searchInput = document.querySelector('.search-bar input');
+        if (searchInput) searchInput.focus();
+    }
+
+    // N = new credential (when on vault page)
+    if (e.key === 'n' && !e.ctrlKey && !e.metaKey) {
+        var newBtn = document.querySelector('a[href*="vault/new"]');
+        if (newBtn) { e.preventDefault(); newBtn.click(); }
+    }
+
+    // ? = toggle shortcuts help
+    if (e.key === '?' && !e.ctrlKey) {
+        e.preventDefault();
+        toggleShortcutsHelp();
+    }
+});
+
+function toggleShortcutsHelp() {
+    var existing = document.getElementById('shortcuts-panel');
+    if (existing) { existing.remove(); return; }
+
+    var panel = document.createElement('div');
+    panel.id = 'shortcuts-panel';
+    panel.innerHTML = '<div style="position:fixed;bottom:1rem;right:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:9999;min-width:220px;">' +
+        '<h4 style="font-size:0.85rem;font-weight:700;margin-bottom:0.75rem;color:var(--text-primary);">Atalhos de teclado</h4>' +
+        '<div style="font-size:0.8rem;color:var(--text-secondary);line-height:2;">' +
+        '<div><kbd style="background:var(--gray-100);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.75rem;font-weight:600;">Ctrl+K</kbd> Buscar</div>' +
+        '<div><kbd style="background:var(--gray-100);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.75rem;font-weight:600;">N</kbd> Nova credencial</div>' +
+        '<div><kbd style="background:var(--gray-100);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.75rem;font-weight:600;">?</kbd> Este painel</div>' +
+        '</div>' +
+        '<button onclick="this.parentElement.parentElement.remove()" style="position:absolute;top:0.5rem;right:0.75rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem;">×</button>' +
+        '</div>';
+    document.body.appendChild(panel);
+}
