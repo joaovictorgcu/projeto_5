@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Keyflow — Cofre de senhas colaborativo para pequenas equipes. Compartilhe credenciais com seguranca, controle de acesso e log de auditoria.">
-    <meta name="theme-color" content="#7c3aed">
+    <meta name="description" content="Keyflow — Cofre de senhas colaborativo para pequenas equipes. Compartilhe credenciais com segurança, controle de acesso e log de auditoria.">
+    <meta name="theme-color" content="#ea580c">
     <title>{% block title %}Keyflow{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,10 +17,10 @@
     {% include 'icons.html' %}
 
     {# Skip link for keyboard navigation (P1 accessibility) #}
-    <a href="#main-content" class="skip-link">Pular para o conteudo principal</a>
+    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
     {% if current_user.is_authenticated %}
-    <nav class="navbar" role="navigation" aria-label="Navegacao principal">
+    <nav class="navbar" role="navigation" aria-label="Navegação principal">
         <div class="nav-container">
             <a href="{{ url_for('main.dashboard') }}" class="nav-brand" aria-label="Keyflow - Voltar ao dashboard">
                 <span class="brand-key">key</span><span class="brand-flow">flow</span>
@@ -72,6 +72,15 @@
 
         {% block content %}{% endblock %}
     </main>
+
+    {% block footer %}
+    <footer class="site-footer site-footer-compact">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Keyflow. Todos os direitos reservados.</p>
+            <p>Desenvolvido por alunos do 4º Período de Ciência da Computação — <strong>CESAR School</strong></p>
+        </div>
+    </footer>
+    {% endblock %}
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     {% block scripts %}{% endblock %}
