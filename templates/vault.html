@@ -107,7 +107,11 @@
             <span class="category-badge" style="--chip-color: {{ cat.color }}">
                 <svg class="icon icon-sm"><use href="#{{ cat.icon }}"/></svg> {{ cat.label }}
             </span>
-            <small>Criada por {{ cred.creator.name }} em {{ cred.created_at.strftime('%d/%m/%Y') }}</small>
+            <span style="font-size:0.75rem;color:var(--text-muted);">
+                <svg class="icon icon-sm" style="vertical-align:middle;"><use href="#icon-users"/></svg>
+                {{ cred.permissions | length }} acesso(s)
+            </span>
+            <small>{{ cred.creator.name }} · {{ cred.created_at.strftime('%d/%m/%Y') }}</small>
         </div>
     </div>
     {% endfor %}
