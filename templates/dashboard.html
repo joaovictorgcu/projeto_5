@@ -105,13 +105,49 @@
     </div>
 </div>
 
-<div class="quick-actions">
+<!-- Gráficos -->
+<div class="dashboard-grid" style="margin-top:1.5rem;">
+    <div class="card">
+        <div class="card-header">
+            <h2>Acessos por dia (últimos 7 dias)</h2>
+        </div>
+        <div class="card-body">
+            <canvas id="chart-daily" height="200"></canvas>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h2>Ações por tipo</h2>
+        </div>
+        <div class="card-body" style="display:flex;justify-content:center;">
+            <canvas id="chart-actions" height="200" style="max-width:280px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Top 5 credenciais mais acessadas</h2>
+    </div>
+    <div class="card-body">
+        <canvas id="chart-top" height="150"></canvas>
+    </div>
+</div>
+
+<div class="quick-actions" style="margin-top:1.5rem;">
     <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
 </div>
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
+var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+var textColor = isDark ? '#b8b2a8' : '#57534e';
+var gridColor = isDark ? '#2e2c28' : '#e7e5e4';
+Chart.defaults.color = textColor;
+Chart.defaults.borderColor = gridColor;
+
 // Carregar Health Score
 fetch('/api/health-score', {
     headers: { 'X-CSRFToken': getCSRFToken() }
@@ -141,6 +177,82 @@ fetch('/api/health-score', {
             issues.innerHTML += '<li><span class="health-dot" style="background:' + dotColor + '"></span> ' + issue.message + '</li>';
         });
     }
+});
+
+// Carregar gráficos
+fetch('/api/dashboard-stats', { headers: { 'X-CSRFToken': getCSRFToken() } })
+.then(function(r) { return r.json(); })
+.then(function(data) {
+    // Gráfico 1: Acessos por dia (linha)
+    new Chart(document.getElementById('chart-daily'), {
+        type: 'line',
+        data: {
+            labels: data.daily_access.map(function(d) { return d.date; }),
+            datasets: [{
+                label: 'Acessos',
+                data: data.daily_access.map(function(d) { return d.count; }),
+                borderColor: '#ea580c',
+                backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#ea580c',
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+
+    // Gráfico 2: Ações por tipo (donut)
+    var actionLabels = Object.keys(data.actions_breakdown);
+    var actionValues = Object.values(data.actions_breakdown);
+    var actionColors = ['#f97316', '#fb923c', '#fdba74', '#fed7aa', '#ea580c'];
+    new Chart(document.getElementById('chart-actions'), {
+        type: 'doughnut',
+        data: {
+            labels: actionLabels,
+            datasets: [{
+                data: actionValues,
+                backgroundColor: actionColors.slice(0, actionLabels.length),
+                borderWidth: 2,
+                borderColor: isDark ? '#1c1b18' : '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true } }
+            }
+        }
+    });
+
+    // Gráfico 3: Top 5 credenciais (barras horizontais)
+    new Chart(document.getElementById('chart-top'), {
+        type: 'bar',
+        data: {
+            labels: data.top_credentials.map(function(c) { return c.name; }),
+            datasets: [{
+                label: 'Acessos',
+                data: data.top_credentials.map(function(c) { return c.count; }),
+                backgroundColor: '#f97316',
+                borderRadius: 6,
+                barThickness: 24
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
 });
 </script>
 {% endblock %}
