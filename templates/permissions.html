@@ -3,55 +3,123 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Permissões: {{ cred.name }}</h1>
-    <a href="{{ url_for('vault.index') }}" class="btn btn-outline">Voltar ao cofre</a>
+    <h1>
+        <svg class="icon" style="margin-right:0.35rem;"><use href="#icon-users"/></svg>
+        Permissões: {{ cred.name }}
+    </h1>
+    <a href="{{ url_for('vault.index') }}" class="btn btn-outline">
+        <svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg> Voltar ao cofre
+    </a>
 </div>
 
-<div class="form-container">
+{% set total_with_access = perms | length %}
+<div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-body" style="display:flex;align-items:center;gap:1rem;">
+        <svg class="icon-feature" style="color:var(--purple-500);"><use href="#icon-shield-check"/></svg>
+        <div>
+            <p style="font-weight:700;color:var(--text-primary);">{{ total_with_access }} membro(s) com acesso</p>
+            <p style="font-size:0.85rem;color:var(--text-muted);">Criada por {{ cred.creator.name }}. Defina abaixo quem pode ver ou usar esta credencial.</p>
+        </div>
+    </div>
+</div>
+
+<div class="form-container" style="max-width:700px;">
     <form method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Membro</th>
-                    <th>Permissão</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in members %}
-                {% if member.id != cred.created_by %}
-                <tr>
-                    <td>
-                        <span class="member-avatar-sm">{{ member.name[0] | upper }}</span>
-                        {{ member.name }}
-                    </td>
-                    <td>
-                        {% set perm = perms.get(member.id) %}
-                        <select name="perm_{{ member.id }}" class="form-select">
-                            <option value="none" {{ 'selected' if not perm }}>Sem acesso</option>
-                            <option value="use" {{ 'selected' if perm and not perm.can_view_password }}>Pode usar (sem ver senha)</option>
-                            <option value="view" {{ 'selected' if perm and perm.can_view_password }}>Pode ver a senha</option>
-                        </select>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td>
-                        <span class="member-avatar-sm">{{ member.name[0] | upper }}</span>
-                        {{ member.name }} <span class="badge badge-admin">Criador</span>
-                    </td>
-                    <td>Acesso total</td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Ação em lote -->
+        <div class="card" style="margin-bottom:1.25rem;">
+            <div class="card-header">
+                <h2>Definir em lote</h2>
+            </div>
+            <div class="card-body" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <button type="button" class="btn btn-sm btn-outline" onclick="setAllPerms('none')">
+                    <svg class="icon icon-sm"><use href="#icon-lock"/></svg> Revogar todos
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="setAllPerms('use')">
+                    <svg class="icon icon-sm"><use href="#icon-eye-off"/></svg> Todos podem usar (mascarado)
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="setAllPerms('view')">
+                    <svg class="icon icon-sm"><use href="#icon-eye"/></svg> Todos podem ver
+                </button>
+            </div>
+        </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Salvar permissões</button>
+        <!-- Tabela de membros -->
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Membro</th>
+                            <th>Nível de acesso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        {% if member.id == cred.created_by %}
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:0.5rem;">
+                                    <span class="member-avatar-sm">{{ member.name[0] | upper }}</span>
+                                    <div>
+                                        <span style="font-weight:600;">{{ member.name }}</span>
+                                        <span class="badge badge-admin" style="margin-left:0.35rem;">Criador</span>
+                                        <div style="font-size:0.75rem;color:var(--text-muted);">{{ member.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span style="color:var(--green-500);font-weight:600;font-size:0.85rem;">
+                                    <svg class="icon icon-sm"><use href="#icon-check"/></svg> Acesso total
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:0.5rem;">
+                                    <span class="member-avatar-sm">{{ member.name[0] | upper }}</span>
+                                    <div>
+                                        <span style="font-weight:600;">{{ member.name }}</span>
+                                        {% if member.role == 'admin' %}<span class="badge badge-admin" style="margin-left:0.35rem;">Admin</span>{% endif %}
+                                        <div style="font-size:0.75rem;color:var(--text-muted);">{{ member.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {% set perm = perms.get(member.id) %}
+                                <select name="perm_{{ member.id }}" class="form-select perm-select" style="max-width:250px;">
+                                    <option value="none" {{ 'selected' if not perm }}>🔒 Sem acesso</option>
+                                    <option value="use" {{ 'selected' if perm and not perm.can_view_password }}>👁️‍🗨️ Pode usar (sem ver senha)</option>
+                                    <option value="view" {{ 'selected' if perm and perm.can_view_password }}>👁️ Pode ver a senha</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-actions" style="margin-top:1.5rem;">
+            <button type="submit" class="btn btn-primary">
+                <svg class="icon icon-sm"><use href="#icon-check"/></svg> Salvar permissões
+            </button>
             <a href="{{ url_for('vault.index') }}" class="btn btn-outline">Cancelar</a>
         </div>
     </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function setAllPerms(value) {
+    document.querySelectorAll('.perm-select').forEach(function(sel) {
+        sel.value = value;
+    });
+    showToast('Permissões definidas em lote. Clique "Salvar" para confirmar.');
+}
+</script>
 {% endblock %}
