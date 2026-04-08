@@ -75,7 +75,7 @@
             <p style="color:var(--green-500);font-weight:600;margin-bottom:1rem;">
                 <svg class="icon icon-sm"><use href="#icon-check"/></svg> MFA ativado
             </p>
-            <form method="POST" action="{{ url_for('main.mfa_disable') }}" onsubmit="return confirm('Tem certeza que deseja desativar o MFA?')">
+            <form method="POST" action="{{ url_for('org.mfa_disable') }}" onsubmit="return confirm('Tem certeza que deseja desativar o MFA?')">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label for="mfa_code">Digite o código atual para desativar</label>
@@ -85,7 +85,7 @@
             </form>
             {% else %}
             <p style="margin-bottom:1rem;">Proteja sua conta com um código de 6 dígitos do Google Authenticator ou Authy.</p>
-            <a href="{{ url_for('main.mfa_setup') }}" class="btn btn-primary">
+            <a href="{{ url_for('org.mfa_setup') }}" class="btn btn-primary">
                 <svg class="icon icon-sm"><use href="#icon-qr-code"/></svg> Ativar MFA
             </a>
             {% endif %}

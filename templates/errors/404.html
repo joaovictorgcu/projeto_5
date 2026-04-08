@@ -9,9 +9,9 @@
     <p>A página que você procura não existe ou foi movida.</p>
     <div class="error-actions">
         {% if current_user.is_authenticated %}
-        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Voltar ao Dashboard</a>
+        <a href="{{ url_for('org.dashboard') }}" class="btn btn-primary">Voltar ao Dashboard</a>
         {% else %}
-        <a href="{{ url_for('main.landing') }}" class="btn btn-primary">Voltar ao início</a>
+        <a href="{{ url_for('org.landing') }}" class="btn btn-primary">Voltar ao início</a>
         {% endif %}
     </div>
 </div>

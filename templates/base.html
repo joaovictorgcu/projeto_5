@@ -22,20 +22,20 @@
     {% if current_user.is_authenticated %}
     <nav class="navbar" role="navigation" aria-label="Navegação principal">
         <div class="nav-container">
-            <a href="{{ url_for('main.dashboard') }}" class="nav-brand" aria-label="Keyflow - Voltar ao dashboard">
+            <a href="{{ url_for('org.dashboard') }}" class="nav-brand" aria-label="Keyflow - Voltar ao dashboard">
                 <span class="brand-key">key</span><span class="brand-flow">flow</span>
             </a>
             <div class="nav-links" role="menubar">
-                <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" role="menuitem">
+                <a href="{{ url_for('org.dashboard') }}" class="nav-link {% if request.endpoint == 'org.dashboard' %}active{% endif %}" role="menuitem">
                     <svg class="icon icon-nav"><use href="#icon-home"/></svg> Dashboard
                 </a>
-                <a href="{{ url_for('main.vault') }}" class="nav-link {% if 'vault' in request.endpoint or 'credential' in request.endpoint %}active{% endif %}" role="menuitem">
+                <a href="{{ url_for('vault.index') }}" class="nav-link {% if 'vault' in request.endpoint or 'credential' in request.endpoint %}active{% endif %}" role="menuitem">
                     <svg class="icon icon-nav"><use href="#icon-lock"/></svg> Cofre
                 </a>
-                <a href="{{ url_for('main.members') }}" class="nav-link {% if 'member' in request.endpoint %}active{% endif %}" role="menuitem">
+                <a href="{{ url_for('org.members') }}" class="nav-link {% if 'member' in request.endpoint %}active{% endif %}" role="menuitem">
                     <svg class="icon icon-nav"><use href="#icon-users"/></svg> Membros
                 </a>
-                <a href="{{ url_for('main.logs') }}" class="nav-link {% if request.endpoint == 'main.logs' %}active{% endif %}" role="menuitem">
+                <a href="{{ url_for('org.logs') }}" class="nav-link {% if request.endpoint == 'org.logs' %}active{% endif %}" role="menuitem">
                     <svg class="icon icon-nav"><use href="#icon-clipboard"/></svg> Logs
                 </a>
             </div>
@@ -43,7 +43,7 @@
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema claro/escuro" title="Alternar tema">
                     <svg class="icon" id="theme-icon-svg"><use href="#icon-moon"/></svg>
                 </button>
-                <a href="{{ url_for('main.profile') }}" class="user-name" title="Meu perfil">
+                <a href="{{ url_for('org.profile') }}" class="user-name" title="Meu perfil">
                     <svg class="icon icon-sm"><use href="#icon-user"/></svg>
                     {{ current_user.name }}
                 </a>

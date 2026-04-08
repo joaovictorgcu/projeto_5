@@ -7,6 +7,26 @@
     <p class="text-muted">{{ org.name }}</p>
 </div>
 
+{% if total_credentials == 0 %}
+<div class="card onboarding-card" id="onboarding" style="border-left:4px solid var(--purple-500);margin-bottom:2rem;">
+    <div class="card-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+                <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:0.75rem;">Bem-vindo ao Keyflow! 👋</h2>
+                <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">Siga estes 3 passos para começar:</p>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="{{ url_for('vault.credential_new') }}" class="btn btn-primary" style="width:fit-content;">1. Adicione sua primeira credencial</a>
+                    <a href="{{ url_for('org.members') }}" class="btn btn-outline" style="width:fit-content;">2. Convide sua equipe</a>
+                    <span style="color:var(--text-muted);font-size:0.85rem;padding-left:0.5rem;">3. Defina permissões por credencial</span>
+                </div>
+            </div>
+            <button onclick="this.closest('.onboarding-card').remove();localStorage.setItem('keyflow_tour_dismissed','1')" class="btn btn-sm btn-ghost" title="Dispensar">×</button>
+        </div>
+    </div>
+</div>
+<script>if(localStorage.getItem('keyflow_tour_dismissed')){var el=document.getElementById('onboarding');if(el)el.remove();}</script>
+{% endif %}
+
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-number" data-count="{{ total_credentials }}">{{ total_credentials }}</div>
@@ -46,7 +66,7 @@
     <div class="card">
         <div class="card-header">
             <h2>Últimos acessos</h2>
-            <a href="{{ url_for('main.logs') }}" class="btn btn-sm btn-outline">Ver todos</a>
+            <a href="{{ url_for('org.logs') }}" class="btn btn-sm btn-outline">Ver todos</a>
         </div>
         <div class="card-body">
             {% if recent_logs %}
@@ -82,7 +102,7 @@
     <div class="card">
         <div class="card-header">
             <h2>Membros</h2>
-            <a href="{{ url_for('main.members') }}" class="btn btn-sm btn-outline">Gerenciar</a>
+            <a href="{{ url_for('org.members') }}" class="btn btn-sm btn-outline">Gerenciar</a>
         </div>
         <div class="card-body">
             <ul class="member-list">
@@ -135,7 +155,7 @@
 </div>
 
 <div class="quick-actions" style="margin-top:1.5rem;">
-    <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
+    <a href="{{ url_for('vault.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
 </div>
 {% endblock %}
 

@@ -14,16 +14,31 @@
 {% block content %}
 <div class="page-header">
     <h1>Cofre de Senhas</h1>
-    <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
+    <a href="{{ url_for('vault.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
 </div>
 
 <!-- Barra de busca -->
-<form action="{{ url_for('main.vault_search') }}" method="GET">
+<form action="{{ url_for('vault.vault_search') }}" method="GET">
     <div class="search-bar">
         <span class="search-icon"><svg class="icon"><use href="#icon-search"/></svg></span>
         <input type="text" name="q" placeholder="Buscar por nome ou login..." value="{{ search_query | default('') }}" aria-label="Buscar credenciais">
     </div>
 </form>
+
+{% if credentials %}
+<p class="vault-summary text-muted" style="margin-bottom:0.75rem;font-size:0.85rem;">
+    {{ credentials | length }} credenciais
+    {% set cats = {} %}
+    {% for c in credentials %}
+        {% if cats.update({c.category: cats.get(c.category, 0) + 1}) %}{% endif %}
+    {% endfor %}
+    —
+    {% for key, count in cats.items() %}
+        {% set cat_info = CATEGORIES.get(key, CATEGORIES['outros']) %}
+        {{ count }} {{ cat_info.label }}{{ ', ' if not loop.last else '' }}
+    {% endfor %}
+</p>
+{% endif %}
 
 <!-- Filtro por categoria -->
 <div class="category-filters">
@@ -38,7 +53,7 @@
 {% if search_query is defined and search_query %}
 <p class="text-muted" style="margin-bottom:1rem;">
     {{ credentials | length }} resultado(s) para "<strong>{{ search_query }}</strong>"
-    &middot; <a href="{{ url_for('main.vault') }}">Limpar busca</a>
+    &middot; <a href="{{ url_for('vault.index') }}">Limpar busca</a>
 </p>
 {% endif %}
 
@@ -55,9 +70,9 @@
                 <h3>{{ cred.name }}</h3>
             </div>
             <div class="credential-actions">
-                <a href="{{ url_for('main.credential_permissions', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Permissões" aria-label="Gerenciar permissões de {{ cred.name }}"><svg class="icon"><use href="#icon-users"/></svg></a>
-                <a href="{{ url_for('main.credential_edit', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Editar" aria-label="Editar {{ cred.name }}"><svg class="icon"><use href="#icon-edit"/></svg></a>
-                <form method="POST" action="{{ url_for('main.credential_delete', cred_id=cred.id) }}" class="inline-form" onsubmit="return confirm('Tem certeza que deseja deletar esta credencial?')">
+                <a href="{{ url_for('vault.credential_permissions', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Permissões" aria-label="Gerenciar permissões de {{ cred.name }}"><svg class="icon"><use href="#icon-users"/></svg></a>
+                <a href="{{ url_for('vault.credential_edit', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Editar" aria-label="Editar {{ cred.name }}"><svg class="icon"><use href="#icon-edit"/></svg></a>
+                <form method="POST" action="{{ url_for('vault.credential_delete', cred_id=cred.id) }}" class="inline-form" onsubmit="return confirm('Tem certeza que deseja deletar esta credencial?')">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-sm btn-ghost btn-danger" title="Deletar" aria-label="Deletar {{ cred.name }}"><svg class="icon"><use href="#icon-trash"/></svg></button>
                 </form>
@@ -103,7 +118,7 @@
     <h2>{% if search_query is defined and search_query %}Nenhuma credencial encontrada{% else %}Seu cofre está vazio{% endif %}</h2>
     <p>{% if search_query is defined and search_query %}Tente buscar com outros termos.{% else %}Adicione sua primeira credencial para começar a compartilhar senhas com segurança.{% endif %}</p>
     {% if not (search_query is defined and search_query) %}
-    <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
+    <a href="{{ url_for('vault.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
     {% endif %}
 </div>
 {% endif %}

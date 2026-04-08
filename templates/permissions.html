@@ -4,7 +4,7 @@
 {% block content %}
 <div class="page-header">
     <h1>Permissões: {{ cred.name }}</h1>
-    <a href="{{ url_for('main.vault') }}" class="btn btn-outline">Voltar ao cofre</a>
+    <a href="{{ url_for('vault.index') }}" class="btn btn-outline">Voltar ao cofre</a>
 </div>
 
 <div class="form-container">
@@ -50,7 +50,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Salvar permissões</button>
-            <a href="{{ url_for('main.vault') }}" class="btn btn-outline">Cancelar</a>
+            <a href="{{ url_for('vault.index') }}" class="btn btn-outline">Cancelar</a>
         </div>
     </form>
 </div>

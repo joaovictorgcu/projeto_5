@@ -19,7 +19,7 @@
 
         <div class="invite-email-form" style="margin-top:1.5rem;">
             <p style="margin-bottom:0.5rem;font-weight:600;font-size:0.9rem;">Ou envie o convite por e-mail:</p>
-            <form method="POST" action="{{ url_for('main.invite_email') }}" style="display:flex;gap:0.5rem;align-items:flex-end;">
+            <form method="POST" action="{{ url_for('org.invite_email') }}" style="display:flex;gap:0.5rem;align-items:flex-end;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group" style="flex:1;margin-bottom:0;">
                     <input type="email" name="email" required placeholder="email@colaborador.com" aria-label="E-mail do convidado">
@@ -72,12 +72,12 @@
                     <td>
                         {% if member.id != current_user.id %}
                             {% if member.is_active_member %}
-                            <form method="POST" action="{{ url_for('main.member_remove', user_id=member.id) }}" class="inline-form" onsubmit="return confirm('Remover {{ member.name }} da organização?')">
+                            <form method="POST" action="{{ url_for('org.member_remove', user_id=member.id) }}" class="inline-form" onsubmit="return confirm('Remover {{ member.name }} da organização?')">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn btn-sm btn-danger">Remover</button>
                             </form>
                             {% else %}
-                            <form method="POST" action="{{ url_for('main.member_reactivate', user_id=member.id) }}" class="inline-form">
+                            <form method="POST" action="{{ url_for('org.member_reactivate', user_id=member.id) }}" class="inline-form">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn btn-sm btn-outline">Reativar</button>
                             </form>
