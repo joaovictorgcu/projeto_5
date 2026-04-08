@@ -29,7 +29,7 @@
         <div class="credential-header">
             <h3>{{ cred.name }}</h3>
             <div class="credential-actions">
-                <a href="{{ url_for('main.credential_permissions', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Permissoes" aria-label="Gerenciar permissoes de {{ cred.name }}"><svg class="icon"><use href="#icon-users"/></svg></a>
+                <a href="{{ url_for('main.credential_permissions', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Permissões" aria-label="Gerenciar permissões de {{ cred.name }}"><svg class="icon"><use href="#icon-users"/></svg></a>
                 <a href="{{ url_for('main.credential_edit', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Editar" aria-label="Editar {{ cred.name }}"><svg class="icon"><use href="#icon-edit"/></svg></a>
                 <form method="POST" action="{{ url_for('main.credential_delete', cred_id=cred.id) }}" class="inline-form" onsubmit="return confirm('Tem certeza que deseja deletar esta credencial?')">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -57,7 +57,7 @@
             </div>
             {% if cred.notes %}
             <div class="credential-field">
-                <label>Observacao</label>
+                <label>Observação</label>
                 <p class="notes-text">{{ cred.notes }}</p>
             </div>
             {% endif %}
@@ -71,8 +71,8 @@
 {% else %}
 <div class="empty-state-container">
     <div class="empty-icon"><svg class="icon-xl"><use href="#icon-lock"/></svg></div>
-    <h2>{% if search_query is defined and search_query %}Nenhuma credencial encontrada{% else %}Seu cofre esta vazio{% endif %}</h2>
-    <p>{% if search_query is defined and search_query %}Tente buscar com outros termos.{% else %}Adicione sua primeira credencial para comecar a compartilhar senhas com seguranca.{% endif %}</p>
+    <h2>{% if search_query is defined and search_query %}Nenhuma credencial encontrada{% else %}Seu cofre está vazio{% endif %}</h2>
+    <p>{% if search_query is defined and search_query %}Tente buscar com outros termos.{% else %}Adicione sua primeira credencial para começar a compartilhar senhas com segurança.{% endif %}</p>
     {% if not (search_query is defined and search_query) %}
     <a href="{{ url_for('main.credential_new') }}" class="btn btn-primary">+ Nova credencial</a>
     {% endif %}

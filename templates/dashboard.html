@@ -18,7 +18,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-value">{{ org.invite_code }}</div>
-        <div class="stat-label">Codigo de convite</div>
+        <div class="stat-label">Código de convite</div>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
 <div class="health-section">
     <div class="card">
         <div class="card-header">
-            <h2><svg class="icon icon-sm" style="margin-right:0.35rem"><use href="#icon-shield-check"/></svg> Saude das Senhas</h2>
+            <h2><svg class="icon icon-sm" style="margin-right:0.35rem"><use href="#icon-shield-check"/></svg> Saúde das Senhas</h2>
         </div>
         <div class="card-body" id="health-container">
             <div class="health-bar-container">
@@ -36,7 +36,7 @@
                 <div class="health-score-number" id="health-score" style="color:var(--gray-400)">--</div>
             </div>
             <ul class="health-issues" id="health-issues">
-                <li style="color:var(--text-muted)">Carregando analise...</li>
+                <li style="color:var(--text-muted)">Carregando análise...</li>
             </ul>
         </div>
     </div>
@@ -45,7 +45,7 @@
 <div class="dashboard-grid">
     <div class="card">
         <div class="card-header">
-            <h2>Ultimos acessos</h2>
+            <h2>Últimos acessos</h2>
             <a href="{{ url_for('main.logs') }}" class="btn btn-sm btn-outline">Ver todos</a>
         </div>
         <div class="card-body">
@@ -55,7 +55,7 @@
                     <tr>
                         <th>Quem</th>
                         <th>Credencial</th>
-                        <th>Acao</th>
+                        <th>Ação</th>
                         <th>Quando</th>
                     </tr>
                 </thead>
@@ -132,9 +132,9 @@ fetch('/api/health-score', {
     // Issues
     issues.innerHTML = '';
     if (data.total === 0) {
-        issues.innerHTML = '<li>Adicione credenciais para ver a analise de seguranca.</li>';
+        issues.innerHTML = '<li>Adicione credenciais para ver a análise de segurança.</li>';
     } else if (data.issues.length === 0) {
-        issues.innerHTML = '<li style="color:#22c55e"><span class="health-dot" style="background:#22c55e"></span> Todas as senhas estao em bom estado!</li>';
+        issues.innerHTML = '<li style="color:#22c55e"><span class="health-dot" style="background:#22c55e"></span> Todas as senhas estão em bom estado!</li>';
     } else {
         data.issues.forEach(function(issue) {
             var dotColor = issue.type === 'duplicate' ? '#ef4444' : issue.type === 'weak' ? '#f97316' : '#eab308';
