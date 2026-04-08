@@ -4,46 +4,66 @@
 {% block content %}
 <div class="auth-page">
     <div class="auth-card">
-        <h1 class="auth-brand"><span class="brand-key">key</span><span class="brand-flow">flow</span></h1>
-        <h2>Criar sua conta</h2>
+        <div class="auth-header">
+            <h1 class="auth-brand"><span class="brand-key">key</span><span class="brand-flow">flow</span></h1>
+            <h2>Crie sua conta</h2>
+            <p class="auth-desc">Comece a compartilhar senhas com segurança em menos de 2 minutos.</p>
+        </div>
 
         <form method="POST" action="{{ url_for('auth.register') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <div class="form-group">
                 <label for="name">Nome completo</label>
-                <input type="text" id="name" name="name" required placeholder="Seu nome">
+                <div class="input-icon-wrapper">
+                    <svg class="input-icon"><use href="#icon-user"/></svg>
+                    <input type="text" id="name" name="name" required placeholder="Seu nome">
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                <div class="input-icon-wrapper">
+                    <svg class="input-icon"><use href="#icon-key"/></svg>
+                    <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="password">Senha</label>
-                <input type="password" id="password" name="password" required placeholder="Minimo 6 caracteres" minlength="6">
+                <div class="input-icon-wrapper">
+                    <svg class="input-icon"><use href="#icon-lock"/></svg>
+                    <input type="password" id="password" name="password" required placeholder="Mínimo 6 caracteres" minlength="6">
+                </div>
             </div>
 
-            <hr class="form-divider">
-
-            <p class="form-hint">Crie uma nova organizacao ou entre em uma existente com codigo de convite.</p>
+            <div class="auth-divider"><span>sua equipe</span></div>
 
             <div class="form-group">
-                <label for="org_name">Nome da organizacao (nova equipe)</label>
-                <input type="text" id="org_name" name="org_name" placeholder="Ex: Minha Agencia">
+                <label for="org_name">Criar nova organização</label>
+                <div class="input-icon-wrapper">
+                    <svg class="input-icon"><use href="#icon-users"/></svg>
+                    <input type="text" id="org_name" name="org_name" placeholder="Ex: Minha Agência">
+                </div>
+                <small class="form-hint">Você será o administrador da organização.</small>
             </div>
 
             <div class="form-group">
-                <label for="invite_code">Ou codigo de convite (equipe existente)</label>
-                <input type="text" id="invite_code" name="invite_code" placeholder="Ex: a1b2c3d4">
+                <label for="invite_code">Ou entrar com código de convite</label>
+                <div class="input-icon-wrapper">
+                    <svg class="input-icon"><use href="#icon-external-link"/></svg>
+                    <input type="text" id="invite_code" name="invite_code" placeholder="Ex: DEMO2026">
+                </div>
+                <small class="form-hint">Peça o código ao administrador da equipe.</small>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Criar conta</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                <span class="btn-text">Criar conta</span>
+            </button>
         </form>
 
         <p class="auth-footer">
-            Ja tem conta? <a href="{{ url_for('auth.login') }}">Entre aqui</a>
+            Já tem conta? <a href="{{ url_for('auth.login') }}">Entre aqui</a>
         </p>
     </div>
 </div>
