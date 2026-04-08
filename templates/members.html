@@ -16,6 +16,19 @@
             <span class="invite-code" id="invite-code">{{ org.invite_code }}</span>
             <button class="btn btn-sm btn-outline" onclick="copyText('{{ org.invite_code }}')">Copiar</button>
         </div>
+
+        <div class="invite-email-form" style="margin-top:1.5rem;">
+            <p style="margin-bottom:0.5rem;font-weight:600;font-size:0.9rem;">Ou envie o convite por e-mail:</p>
+            <form method="POST" action="{{ url_for('main.invite_email') }}" style="display:flex;gap:0.5rem;align-items:flex-end;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group" style="flex:1;margin-bottom:0;">
+                    <input type="email" name="email" required placeholder="email@colaborador.com" aria-label="E-mail do convidado">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <svg class="icon icon-sm"><use href="#icon-mail"/></svg> Enviar convite
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 
