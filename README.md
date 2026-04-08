@@ -1,109 +1,54 @@
 # Keyflow
 
-**Cofre de Senhas Colaborativo para Pequenas Equipes**
+**Cofre de senhas colaborativo para pequenas equipes.**
 
-O Keyflow é uma plataforma web de compartilhamento seguro de senhas para agências digitais, startups e PMEs com 3 a 50 pessoas. O produto resolve um problema cotidiano e crítico: equipes compartilham credenciais de redes sociais, ferramentas SaaS e contas bancárias por WhatsApp e planilhas, expondo a empresa a vazamentos, invasões e multas da LGPD.
+Sabe quando alguém manda a senha do Instagram da empresa pelo WhatsApp, três pessoas copiam pro celular pessoal, e quando o estagiário sai ninguém sabe revogar o acesso? O Keyflow resolve isso.
 
-> Projeto Acadêmico — 4º Período de Ciência da Computação — CESAR School — 2026
+É uma plataforma web onde sua equipe cadastra, compartilha e controla credenciais de forma segura — com log de tudo que acontece, pronto pra qualquer auditoria da LGPD.
 
----
-
-## Funcionalidades
-
-### Autenticação
-- Cadastro com nome, e-mail e senha
-- Login/logout com sessão segura (Flask-Login)
-- Hash de senhas com bcrypt + salt
-- Isolamento por organização (cada usuário só vê dados da sua org)
-- **MFA com TOTP** (Google Authenticator) — QR Code, ativação/desativação no perfil
-
-### Cofre de Senhas
-- Cadastrar credencial: nome do serviço, login, senha criptografada, observações
-- Listar, editar e deletar credenciais
-- Campo de senha oculto por padrão com botão revelar/ocultar
-- Copiar login ou senha com um clique
-- Busca por nome ou login
-- Auto-ocultar senha após 30 segundos
-- **Categorias com ícones** — Rede Social, E-mail, Financeiro, Cloud/Dev, Comunicação, Marketing
-- **Filtro por categoria** — chips visuais para filtrar credenciais no cofre
-
-### Gerador de Senhas
-- Tamanho configurável de 8 a 32 caracteres
-- Opções: maiúsculas, minúsculas, números, símbolos
-- Gerado com `crypto.getRandomValues()` (criptograficamente seguro)
-- Indicador de força em tempo real (Muito fraca → Forte)
-
-### Compartilhamento
-- Convite de membros por código único da organização
-- Permissão por credencial: "pode ver a senha" ou "só pode usar sem ver" (mascarado)
-- Revogar acesso de um membro com um clique
-- **Notificação por e-mail** — convite de equipe, alerta de acesso, confirmação de remoção
-
-### Log de Auditoria (LGPD)
-- Registro automático: quem acessou qual credencial, qual ação e quando
-- Tela de auditoria com lista cronológica
-- Exportação em CSV (Data, Usuário, E-mail, Credencial, Ação)
-- **Relatório LGPD em PDF** — documento profissional com cabeçalho, tabela de logs e resumo estatístico
-
-### Dashboard
-- Número de credenciais e membros ativos
-- Código de convite da organização
-- Health Score de senhas (analisa fracas, curtas, pouco complexas, duplicadas)
-- Últimos 10 acessos com usuário, credencial e ação
-- **Gráficos interativos** (Chart.js) — acessos por dia, ações por tipo, top credenciais
-- **Detecção de senhas vazadas** — integração com HaveIBeenPwned (API k-Anonymity)
-
-### Outros
-- Dark mode com persistência (localStorage)
-- Página de perfil (alterar nome e senha)
-- Páginas de erro 404 e 500 estilizadas
-- Sistema de ícones SVG inline (25+ ícones Lucide)
-- Skip-link e ARIA labels para acessibilidade
-- Responsivo (mobile-first)
+> Projeto do 4º Período de Ciência da Computação — CESAR School — 2026
 
 ---
 
-## Stack Tecnológica
+## O que ele faz
 
-| Camada | Tecnologia | Por quê |
-|--------|-----------|---------|
-| Frontend | HTML + CSS + JavaScript puro | Equipe já domina; sem necessidade de framework |
-| Backend | Python 3.13 + Flask 3.1 | Familiar para a equipe; direto para criar APIs REST |
-| ORM | Flask-SQLAlchemy | Abstrai SQL; facilita migração SQLite → PostgreSQL |
-| Banco de dados | SQLite (dev) / PostgreSQL (prod) | SQL já é domínio da equipe |
-| Autenticação | Flask-Login + bcrypt + pyotp (MFA) | Sessões seguras; padrão da indústria para hash |
-| Criptografia (cofre) | Fernet (AES-128-CBC via PBKDF2) | Criptografia simétrica; fácil de usar |
-| Proteção CSRF | Flask-WTF | Nativo do Flask; protege todos os formulários |
-| Gráficos | Chart.js 4.x (CDN) | Leve, interativo, suporta dark mode |
-| PDF | ReportLab | Geração de PDF profissional no backend |
-| E-mail | Flask-Mail + Mailtrap (demo) | Envio assíncrono; simulado para apresentação |
-| Ícones | SVG inline (Lucide) | Escalável, tematizável, sem emojis |
-| Deploy | Render / Railway + Gunicorn | Deploy via GitHub sem custo; HTTPS gratuito |
+**Cofre de senhas** — Cadastre credenciais (serviço, login, senha, notas) com criptografia. Organize por categorias (Rede Social, Financeiro, Cloud, etc.) e encontre rápido com busca e filtros visuais.
+
+**Compartilhamento controlado** — Defina quem pode ver cada senha. Tem o modo "mascarado": a pessoa usa a credencial mas não consegue ver a senha real. Perfeito pra estagiários.
+
+**Gerenciamento de equipe** — Convite por código ou por e-mail. Quando alguém sai, remove com um clique e pronto — acesso revogado na hora.
+
+**Dashboard com gráficos** — Painel com visão geral: acessos por dia, ações por tipo, credenciais mais usadas, health score das senhas e detecção de vazamentos via HaveIBeenPwned.
+
+**Log de auditoria completo** — Tudo registrado automaticamente: quem, o quê e quando. Exporta em CSV ou gera um relatório PDF profissional pra LGPD.
+
+**Autenticação forte** — Login com bcrypt, MFA com Google Authenticator (QR Code), rate limiting contra brute force e auto-logout por inatividade.
+
+**Gerador de senhas** — Gera senhas de 8 a 32 caracteres com indicador de força em tempo real.
+
+**Extras** — Dark mode, favoritar credenciais, atalhos de teclado (Ctrl+K pra buscar), tour guiado pra quem acabou de entrar, páginas de erro estilizadas e sistema de ícones SVG.
 
 ---
 
-## Como Rodar Localmente
+## Tecnologias
+
+- **Backend:** Python 3.13, Flask, SQLAlchemy, bcrypt, Fernet (AES-128-CBC)
+- **Frontend:** HTML, CSS, JavaScript puro (sem framework)
+- **Banco:** SQLite (dev) / PostgreSQL (produção)
+- **Extras:** Chart.js, ReportLab (PDF), Flask-Mail, pyotp (MFA), qrcode
+- **Deploy:** Render / Railway com Gunicorn e HTTPS
+
+---
+
+## Como rodar
 
 ```bash
-# 1. Clone o repositório
 git clone https://github.com/joaovictorgcu/projeto_5
 cd PROJETO_5
-
-# 2. Crie o ambiente virtual
 python -m venv venv
-
-# 3. Ative (Windows)
-source venv/Scripts/activate
-# Linux/Mac: source venv/bin/activate
-
-# 4. Instale as dependências
+source venv/Scripts/activate   # Windows
 pip install -r requirements.txt
-
-# 5. Configure variáveis de ambiente
-cp .env.example .env
-# Edite o .env com sua SECRET_KEY
-
-# 6. Rode a aplicação
+cp .env.example .env           # edite com sua SECRET_KEY
 python app.py
 ```
 
@@ -111,162 +56,70 @@ Acesse `http://127.0.0.1:5000`
 
 ---
 
-## Estrutura do Projeto
+## Estrutura
+
+O código é separado em blueprints por domínio — cada área tem seu próprio arquivo:
 
 ```
-PROJETO_5/
-├── app.py                    # Factory Flask + error handlers
-├── config.py                 # Configuração via .env
-├── models.py                 # Modelos SQLAlchemy
-├── routes.py                 # Endpoints (auth + main + APIs)
-├── crypto_utils.py           # Criptografia Fernet para cofre
-├── schema.sql                # Schema SQL de referência
-├── requirements.txt          # Dependências Python
-├── Procfile                  # Deploy (Gunicorn)
-├── render.yaml               # Blueprint Render + PostgreSQL
-├── runtime.txt               # Versão Python
-├── .env.example              # Exemplo de variáveis de ambiente
-├── .gitignore
-│
-├── static/
-│   ├── style.css             # Design system completo
-│   ├── main.js               # Dark mode, reveal, gerador, toast, gráficos
-│   └── favicon.svg           # Favicon SVG (cadeado laranja)
-│
-├── templates/
-│   ├── base.html             # Layout: navbar, ícones, skip-link, ARIA, footer
-│   ├── icons.html            # 30+ ícones SVG Lucide inline
-│   ├── landing.html          # Landing page completa (12 seções)
-│   ├── login.html            # Tela de login com ícones
-│   ├── register.html         # Cadastro + convite
-│   ├── dashboard.html        # Dashboard + Health Score + gráficos
-│   ├── vault.html            # Cofre com busca e filtro por categoria
-│   ├── credential_form.html  # Form + gerador de senhas + categoria
-│   ├── permissions.html      # Permissões por credencial
-│   ├── members.html          # Gerenciamento de membros + convite e-mail
-│   ├── logs.html             # Logs + export CSV + PDF
-│   ├── profile.html          # Perfil + ativação MFA
-│   ├── mfa_setup.html        # QR Code para Google Authenticator
-│   ├── mfa_verify.html       # Campo de código MFA no login
-│   └── errors/
-│       ├── 404.html
-│       └── 500.html
-│
-└── docs/
-    └── superpowers/specs/    # Documentos de design e especificação
+routes/
+├── auth.py    → login, registro, logout, MFA
+├── vault.py   → cofre, credenciais, permissões, favoritos
+├── org.py     → dashboard, membros, logs, perfil, exports
+└── api.py     → endpoints JSON (health score, stats, vazamentos)
 ```
 
----
-
-## Modelo de Dados
-
-```
-organizations ──── users ──── access_logs
-      │                │
-      └── credentials ─┴── credential_permissions
-```
-
-| Tabela | Campos Principais | Relação |
-|--------|-------------------|---------|
-| `organizations` | id, name, invite_code, created_at | Tem muitos users e credentials |
-| `users` | id, name, email, password_hash, org_id, role, mfa_enabled, totp_secret | Pertence a uma organization |
-| `credentials` | id, org_id, name, login, encrypted_password, notes, category, created_by | Pertence a uma organization |
-| `credential_permissions` | id, credential_id, user_id, can_view_password | Referência credential e user |
-| `access_logs` | id, user_id, credential_id, action, accessed_at | Referência user e credential |
+Outros arquivos importantes:
+- `models.py` — 6 tabelas (users, organizations, credentials, permissions, logs, favorites)
+- `rate_limit.py` — proteção brute force no login
+- `crypto_utils.py` — criptografia Fernet para o cofre
+- `static/style.css` — design system completo com dark mode
+- `static/main.js` — dark mode, reveal, gerador, gráficos, atalhos
 
 ---
 
 ## Segurança
 
-Estas práticas não são opcionais — segurança é a proposta central do Keyflow:
+Segurança é a proposta central do Keyflow. Não é opcional:
 
-| Prática | Implementação |
-|---------|---------------|
-| Senha de login | bcrypt com salt (nunca texto puro) |
-| Senhas do cofre | Fernet (AES-128-CBC) via PBKDF2 com 480.000 iterações |
-| MFA | TOTP (RFC 6238) com Google Authenticator |
-| CSRF | Flask-WTF com token em toda requisição POST |
-| Isolamento | Verificação de org_id em toda query |
-| Vazamentos | API k-Anonymity do HaveIBeenPwned (senha nunca sai do servidor) |
-| Variáveis sensíveis | .env (nunca no código-fonte) |
-| HTTPS | Obrigatório em produção (Render/Railway) |
-| Sessões | Flask-Login com cookie seguro |
-| Validação | Backend valida todos os dados (nunca confia só no frontend) |
+- Senhas de login: **bcrypt com salt** (nunca texto puro)
+- Senhas do cofre: **Fernet (AES-128-CBC)** com PBKDF2 e 480.000 iterações
+- Autenticação em dois fatores: **TOTP** (Google Authenticator)
+- Proteção contra brute force: **rate limiting** (5 tentativas por IP)
+- Auto-logout: **sessão expira** após 30 min de inatividade
+- CSRF: **token** em toda requisição POST
+- Isolamento: **verificação de org_id** em toda query
+- Vazamentos: **API k-Anonymity** (senha nunca sai do servidor)
+- Variáveis sensíveis: **arquivo .env** (nunca no código)
 
 ---
 
-## Deploy em Produção
+## Deploy
 
-O projeto inclui configuração pronta:
+O projeto já vem configurado pra Render:
 
-- `Procfile` — `gunicorn app:app --bind 0.0.0.0:$PORT`
-- `render.yaml` — Web service + PostgreSQL free tier
-- `runtime.txt` — Python 3.13.2
-
-Para usar PostgreSQL, configure no `.env`:
 ```
-DATABASE_URL=postgresql://usuario:senha@host:5432/keyflow
+Procfile       → gunicorn app:app
+render.yaml    → web service + PostgreSQL free
+runtime.txt    → Python 3.13.2
 ```
 
----
-
-## API Endpoints
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | `/` | Landing page |
-| GET/POST | `/register` | Cadastro |
-| GET/POST | `/login` | Login |
-| GET/POST | `/login/mfa` | Verificação MFA |
-| GET | `/logout` | Logout |
-| GET | `/dashboard` | Dashboard |
-| GET | `/vault` | Cofre de senhas |
-| GET | `/vault/search?q=` | Busca no cofre |
-| GET/POST | `/vault/new` | Nova credencial |
-| GET/POST | `/vault/<id>/edit` | Editar credencial |
-| POST | `/vault/<id>/delete` | Deletar credencial |
-| POST | `/vault/<id>/reveal` | Revelar senha (JSON) |
-| GET/POST | `/vault/<id>/permissions` | Permissões |
-| GET | `/members` | Lista de membros |
-| POST | `/members/<id>/remove` | Remover membro |
-| POST | `/members/<id>/reactivate` | Reativar membro |
-| POST | `/members/invite-email` | Convite por e-mail |
-| GET | `/logs` | Logs de auditoria |
-| GET | `/logs/export` | Exportar CSV |
-| GET | `/logs/export-pdf` | Relatório PDF LGPD |
-| GET/POST | `/profile` | Perfil do usuário |
-| GET/POST | `/profile/mfa/setup` | Configurar MFA |
-| POST | `/profile/mfa/disable` | Desativar MFA |
-| GET | `/api/health-score` | Health Score (JSON) |
-| GET | `/api/dashboard-stats` | Estatísticas para gráficos (JSON) |
-| GET | `/api/check-breaches` | Verificar senhas vazadas (JSON) |
-
----
-
-## Análise de Mercado
-
-- Mercado global de gerenciamento de senhas: **~$3.5B** (2025), crescendo **~19% ao ano**
-- 70% da receita concentrada no enterprise — PMEs são o nicho menos atendido
-- Brasil representa **45% do mercado** da América Latina em cibersegurança
-- Nenhum player atual combina: interface simples + compartilhamento mascarado + LGPD + preço acessível
+Basta conectar o repositório no Render, configurar SECRET_KEY e DATABASE_URL, e pronto.
 
 ---
 
 ## Equipe
 
-12 integrantes organizados em 6 duplas:
+12 integrantes em 6 duplas:
 
-| Dupla | Área | Foco Técnico |
-|-------|------|-------------|
-| 1 — Produto & Pesquisa | Entrevistas, personas, validação | Pesquisa qualitativa, Figma |
-| 2 — Design & Protótipo | Wireframes, UI, identidade visual | Figma, CSS, HTML |
-| 3 — Backend: Auth | Cadastro, login, sessões, hash, MFA | Python, Flask, bcrypt, pyotp |
-| 4 — Backend: Cofre | CRUD credenciais, permissões, cripto | Python, Flask, SQL |
-| 5 — Backend: Logs & Org | Logs, membros, remoção, PDF, e-mail | Python, Flask, ReportLab |
-| 6 — Pitch & Documento | Documento estratégico, slides, métricas | Storytelling, dados |
+| Dupla | Foco |
+|-------|------|
+| 1 — Produto & Pesquisa | Entrevistas, personas, validação |
+| 2 — Design & Protótipo | Wireframes, UI, identidade visual |
+| 3 — Backend: Auth | Login, sessões, hash, MFA |
+| 4 — Backend: Cofre | CRUD credenciais, permissões, criptografia |
+| 5 — Backend: Logs & Org | Logs, membros, PDF, e-mail |
+| 6 — Pitch & Documento | Documento estratégico, slides |
 
 ---
 
-## Licença
-
-Projeto acadêmico dos alunos do 4º Período da CESAR School — Ciência da Computação — 2026.
+Projeto acadêmico — 4º Período — Ciência da Computação — CESAR School — 2026
