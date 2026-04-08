@@ -11,7 +11,7 @@
         <h2>Convidar novo membro</h2>
     </div>
     <div class="card-body">
-        <p>Compartilhe este codigo de convite para novos membros se cadastrarem na sua organizacao:</p>
+        <p>Compartilhe este código de convite para novos membros se cadastrarem na sua organização:</p>
         <div class="invite-code-box">
             <span class="invite-code" id="invite-code">{{ org.invite_code }}</span>
             <button class="btn btn-sm btn-outline" onclick="copyText('{{ org.invite_code }}')">Copiar</button>
@@ -29,10 +29,10 @@
                 <tr>
                     <th>Nome</th>
                     <th>E-mail</th>
-                    <th>Funcao</th>
+                    <th>Função</th>
                     <th>Status</th>
                     {% if current_user.role == 'admin' %}
-                    <th>Acoes</th>
+                    <th>Ações</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -59,7 +59,7 @@
                     <td>
                         {% if member.id != current_user.id %}
                             {% if member.is_active_member %}
-                            <form method="POST" action="{{ url_for('main.member_remove', user_id=member.id) }}" class="inline-form" onsubmit="return confirm('Remover {{ member.name }} da organizacao?')">
+                            <form method="POST" action="{{ url_for('main.member_remove', user_id=member.id) }}" class="inline-form" onsubmit="return confirm('Remover {{ member.name }} da organização?')">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn btn-sm btn-danger">Remover</button>
                             </form>
@@ -70,7 +70,7 @@
                             </form>
                             {% endif %}
                         {% else %}
-                        <span class="text-muted">Voce</span>
+                        <span class="text-muted">Você</span>
                         {% endif %}
                     </td>
                     {% endif %}

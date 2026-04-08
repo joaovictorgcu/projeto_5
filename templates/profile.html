@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" value="{{ current_user.email }}" disabled>
-                    <small class="form-hint">O e-mail nao pode ser alterado.</small>
+                    <small class="form-hint">O e-mail não pode ser alterado.</small>
                 </div>
 
                 <hr class="form-divider">
@@ -50,16 +50,16 @@
 
                 <div class="form-group">
                     <label for="current_password">Senha atual</label>
-                    <input type="password" id="current_password" name="current_password" placeholder="Necessario para alterar a senha">
+                    <input type="password" id="current_password" name="current_password" placeholder="Necessário para alterar a senha">
                 </div>
 
                 <div class="form-group">
                     <label for="new_password">Nova senha</label>
-                    <input type="password" id="new_password" name="new_password" placeholder="Minimo 6 caracteres">
+                    <input type="password" id="new_password" name="new_password" placeholder="Mínimo 6 caracteres">
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Salvar alteracoes</button>
+                    <button type="submit" class="btn btn-primary">Salvar alterações</button>
                 </div>
             </form>
         </div>
@@ -68,11 +68,11 @@
     {% if current_user.organization %}
     <div class="card">
         <div class="card-header">
-            <h2>Organizacao</h2>
+            <h2>Organização</h2>
         </div>
         <div class="card-body">
             <p><strong>Nome:</strong> {{ current_user.organization.name }}</p>
-            <p><strong>Codigo de convite:</strong>
+            <p><strong>Código de convite:</strong>
                 <span class="invite-code" style="font-size:1rem;">{{ current_user.organization.invite_code }}</span>
                 <button class="btn btn-sm btn-outline" onclick="copyText('{{ current_user.organization.invite_code }}')">Copiar</button>
             </p>

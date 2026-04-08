@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Permissoes — {{ cred.name }} — Keyflow{% endblock %}
+{% block title %}Permissões — {{ cred.name }} — Keyflow{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h1>Permissoes: {{ cred.name }}</h1>
+    <h1>Permissões: {{ cred.name }}</h1>
     <a href="{{ url_for('main.vault') }}" class="btn btn-outline">Voltar ao cofre</a>
 </div>
 
@@ -15,7 +15,7 @@
             <thead>
                 <tr>
                     <th>Membro</th>
-                    <th>Permissao</th>
+                    <th>Permissão</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,7 +49,7 @@
         </table>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Salvar permissoes</button>
+            <button type="submit" class="btn btn-primary">Salvar permissões</button>
             <a href="{{ url_for('main.vault') }}" class="btn btn-outline">Cancelar</a>
         </div>
     </form>
