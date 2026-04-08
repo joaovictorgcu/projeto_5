@@ -17,7 +17,8 @@
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
                     <a href="{{ url_for('vault.credential_new') }}" class="btn btn-primary" style="width:fit-content;">1. Adicione sua primeira credencial</a>
                     <a href="{{ url_for('org.members') }}" class="btn btn-outline" style="width:fit-content;">2. Convide sua equipe</a>
-                    <span style="color:var(--text-muted);font-size:0.85rem;padding-left:0.5rem;">3. Defina permissões por credencial</span>
+                    <a href="{{ url_for('vault.index') }}" class="btn btn-outline" style="width:fit-content;">3. Defina permissões por credencial</a>
+                    <p style="color:var(--text-muted);font-size:0.8rem;margin-top:0.25rem;padding-left:0.5rem;">No cofre, clique no ícone <svg style="width:14px;height:14px;vertical-align:middle;"><use href="#icon-users"/></svg> de cada credencial para definir quem pode ver ou usar sem ver a senha.</p>
                 </div>
             </div>
             <button onclick="this.closest('.onboarding-card').remove();localStorage.setItem('keyflow_tour_dismissed','1')" class="btn btn-sm btn-ghost" title="Dispensar">×</button>
