@@ -27,6 +27,8 @@ class User(UserMixin, db.Model):
     org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=True)
     role = db.Column(db.String(20), default='member')  # 'admin' ou 'member'
     is_active_member = db.Column(db.Boolean, default=True)
+    mfa_enabled = db.Column(db.Boolean, default=False)
+    totp_secret = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
 
@@ -39,6 +41,7 @@ class Credential(db.Model):
     login = db.Column(db.String(200), nullable=False)
     encrypted_password = db.Column(db.Text, nullable=False)
     notes = db.Column(db.Text, default='')
+    category = db.Column(db.String(30), default='outros')
     created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
