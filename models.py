@@ -72,3 +72,11 @@ class AccessLog(db.Model):
 
     user = db.relationship('User', backref='access_logs')
     credential = db.relationship('Credential', backref='access_logs')
+
+
+class UserFavorite(db.Model):
+    __tablename__ = 'user_favorites'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    credential_id = db.Column(db.Integer, db.ForeignKey('credentials.id'), nullable=False)
+    __table_args__ = (db.UniqueConstraint('user_id', 'credential_id'),)
