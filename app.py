@@ -1,4 +1,6 @@
-from flask import Flask, render_template
+from datetime import timedelta
+
+from flask import Flask, render_template, session
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
@@ -17,6 +19,13 @@ def create_app():
     CSRFProtect(app)
     mail.init_app(app)
 
+    # Auto-logout por inatividade (30 minutos)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+
+    @app.before_request
+    def make_session_permanent():
+        session.permanent = True
+
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Faça login para acessar esta página.'
@@ -27,9 +36,11 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    from routes import main, auth
-    app.register_blueprint(main)
+    from routes import auth, org, vault, api
     app.register_blueprint(auth)
+    app.register_blueprint(org)
+    app.register_blueprint(vault)
+    app.register_blueprint(api)
 
     @app.errorhandler(404)
     def not_found(e):
