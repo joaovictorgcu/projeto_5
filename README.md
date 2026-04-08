@@ -2,72 +2,82 @@
 
 **Cofre de Senhas Colaborativo para Pequenas Equipes**
 
-O Keyflow e uma plataforma web de compartilhamento seguro de senhas para agencias digitais, startups e PMEs com 3 a 50 pessoas. O produto resolve um problema cotidiano e critico: equipes compartilham credenciais de redes sociais, ferramentas SaaS e contas bancarias por WhatsApp e planilhas, expondo a empresa a vazamentos, invasoes e multas da LGPD.
+O Keyflow é uma plataforma web de compartilhamento seguro de senhas para agências digitais, startups e PMEs com 3 a 50 pessoas. O produto resolve um problema cotidiano e crítico: equipes compartilham credenciais de redes sociais, ferramentas SaaS e contas bancárias por WhatsApp e planilhas, expondo a empresa a vazamentos, invasões e multas da LGPD.
 
-> Projeto Academico — Ciencia da Computacao — 4o Periodo — CESAR School — 2026
+> Projeto Acadêmico — 4º Período de Ciência da Computação — CESAR School — 2026
 
 ---
 
-## Funcionalidades do MVP
+## Funcionalidades
 
-### Autenticacao
+### Autenticação
 - Cadastro com nome, e-mail e senha
-- Login/logout com sessao segura (Flask-Login)
+- Login/logout com sessão segura (Flask-Login)
 - Hash de senhas com bcrypt + salt
-- Isolamento por organizacao (cada usuario so ve dados da sua org)
+- Isolamento por organização (cada usuário só vê dados da sua org)
+- **MFA com TOTP** (Google Authenticator) — QR Code, ativação/desativação no perfil
 
 ### Cofre de Senhas
-- Cadastrar credencial: nome do servico, login, senha criptografada, observacoes
+- Cadastrar credencial: nome do serviço, login, senha criptografada, observações
 - Listar, editar e deletar credenciais
-- Campo de senha oculto por padrao com botao revelar/ocultar
+- Campo de senha oculto por padrão com botão revelar/ocultar
 - Copiar login ou senha com um clique
 - Busca por nome ou login
-- Auto-ocultar senha apos 30 segundos
+- Auto-ocultar senha após 30 segundos
+- **Categorias com ícones** — Rede Social, E-mail, Financeiro, Cloud/Dev, Comunicação, Marketing
+- **Filtro por categoria** — chips visuais para filtrar credenciais no cofre
 
 ### Gerador de Senhas
-- Tamanho configuravel de 8 a 32 caracteres
-- Opcoes: maiusculas, minusculas, numeros, simbolos
+- Tamanho configurável de 8 a 32 caracteres
+- Opções: maiúsculas, minúsculas, números, símbolos
 - Gerado com `crypto.getRandomValues()` (criptograficamente seguro)
-- Indicador de forca em tempo real (Muito fraca → Forte)
+- Indicador de força em tempo real (Muito fraca → Forte)
 
 ### Compartilhamento
-- Convite de membros por codigo unico da organizacao
-- Permissao por credencial: "pode ver a senha" ou "so pode usar sem ver" (mascarado)
+- Convite de membros por código único da organização
+- Permissão por credencial: "pode ver a senha" ou "só pode usar sem ver" (mascarado)
 - Revogar acesso de um membro com um clique
+- **Notificação por e-mail** — convite de equipe, alerta de acesso, confirmação de remoção
 
 ### Log de Auditoria (LGPD)
-- Registro automatico: quem acessou qual credencial, qual acao e quando
-- Tela de auditoria com lista cronologica
-- Exportacao em CSV (Data, Usuario, E-mail, Credencial, Acao)
+- Registro automático: quem acessou qual credencial, qual ação e quando
+- Tela de auditoria com lista cronológica
+- Exportação em CSV (Data, Usuário, E-mail, Credencial, Ação)
+- **Relatório LGPD em PDF** — documento profissional com cabeçalho, tabela de logs e resumo estatístico
 
 ### Dashboard
-- Numero de credenciais e membros ativos
-- Codigo de convite da organizacao
+- Número de credenciais e membros ativos
+- Código de convite da organização
 - Health Score de senhas (analisa fracas, curtas, pouco complexas, duplicadas)
-- Ultimos 10 acessos com usuario, credencial e acao
+- Últimos 10 acessos com usuário, credencial e ação
+- **Gráficos interativos** (Chart.js) — acessos por dia, ações por tipo, top credenciais
+- **Detecção de senhas vazadas** — integração com HaveIBeenPwned (API k-Anonymity)
 
 ### Outros
-- Dark mode com persistencia (localStorage)
-- Pagina de perfil (alterar nome e senha)
-- Paginas de erro 404 e 500 estilizadas
-- Sistema de icones SVG inline (25+ icones Lucide)
+- Dark mode com persistência (localStorage)
+- Página de perfil (alterar nome e senha)
+- Páginas de erro 404 e 500 estilizadas
+- Sistema de ícones SVG inline (25+ ícones Lucide)
 - Skip-link e ARIA labels para acessibilidade
 - Responsivo (mobile-first)
 
 ---
 
-## Stack Tecnologica
+## Stack Tecnológica
 
-| Camada | Tecnologia | Por que |
+| Camada | Tecnologia | Por quê |
 |--------|-----------|---------|
-| Frontend | HTML + CSS + JavaScript puro | Equipe ja domina; sem necessidade de framework |
+| Frontend | HTML + CSS + JavaScript puro | Equipe já domina; sem necessidade de framework |
 | Backend | Python 3.13 + Flask 3.1 | Familiar para a equipe; direto para criar APIs REST |
-| ORM | Flask-SQLAlchemy | Abstrai SQL; facilita migracao SQLite → PostgreSQL |
-| Banco de dados | SQLite (dev) / PostgreSQL (prod) | SQL ja e dominio da equipe |
-| Autenticacao | Flask-Login + bcrypt | Sessoes seguras; padrao da industria para hash |
-| Criptografia (cofre) | Fernet (AES-128-CBC via PBKDF2) | Criptografia simetrica; facil de usar |
-| Protecao CSRF | Flask-WTF | Nativo do Flask; protege todos os formularios |
-| Icons | SVG inline (Lucide) | Escalavel, tematizavel, sem emojis |
+| ORM | Flask-SQLAlchemy | Abstrai SQL; facilita migração SQLite → PostgreSQL |
+| Banco de dados | SQLite (dev) / PostgreSQL (prod) | SQL já é domínio da equipe |
+| Autenticação | Flask-Login + bcrypt + pyotp (MFA) | Sessões seguras; padrão da indústria para hash |
+| Criptografia (cofre) | Fernet (AES-128-CBC via PBKDF2) | Criptografia simétrica; fácil de usar |
+| Proteção CSRF | Flask-WTF | Nativo do Flask; protege todos os formulários |
+| Gráficos | Chart.js 4.x (CDN) | Leve, interativo, suporta dark mode |
+| PDF | ReportLab | Geração de PDF profissional no backend |
+| E-mail | Flask-Mail + Mailtrap (demo) | Envio assíncrono; simulado para apresentação |
+| Ícones | SVG inline (Lucide) | Escalável, tematizável, sem emojis |
 | Deploy | Render / Railway + Gunicorn | Deploy via GitHub sem custo; HTTPS gratuito |
 
 ---
@@ -75,7 +85,7 @@ O Keyflow e uma plataforma web de compartilhamento seguro de senhas para agencia
 ## Como Rodar Localmente
 
 ```bash
-# 1. Clone o repositorio
+# 1. Clone o repositório
 git clone https://github.com/joaovictorgcu/projeto_5
 cd PROJETO_5
 
@@ -86,14 +96,14 @@ python -m venv venv
 source venv/Scripts/activate
 # Linux/Mac: source venv/bin/activate
 
-# 4. Instale as dependencias
+# 4. Instale as dependências
 pip install -r requirements.txt
 
-# 5. Configure variaveis de ambiente
+# 5. Configure variáveis de ambiente
 cp .env.example .env
 # Edite o .env com sua SECRET_KEY
 
-# 6. Rode a aplicacao
+# 6. Rode a aplicação
 python app.py
 ```
 
@@ -106,39 +116,44 @@ Acesse `http://127.0.0.1:5000`
 ```
 PROJETO_5/
 ├── app.py                    # Factory Flask + error handlers
-├── config.py                 # Configuracao via .env
-├── models.py                 # 5 modelos SQLAlchemy
-├── routes.py                 # 15+ endpoints (auth + main)
+├── config.py                 # Configuração via .env
+├── models.py                 # Modelos SQLAlchemy
+├── routes.py                 # Endpoints (auth + main + APIs)
 ├── crypto_utils.py           # Criptografia Fernet para cofre
-├── schema.sql                # Schema SQL de referencia
-├── requirements.txt          # Dependencias Python
+├── schema.sql                # Schema SQL de referência
+├── requirements.txt          # Dependências Python
 ├── Procfile                  # Deploy (Gunicorn)
 ├── render.yaml               # Blueprint Render + PostgreSQL
-├── runtime.txt               # Versao Python
-├── .env.example              # Exemplo de variaveis de ambiente
+├── runtime.txt               # Versão Python
+├── .env.example              # Exemplo de variáveis de ambiente
 ├── .gitignore
 │
 ├── static/
-│   ├── style.css             # Design system (~1400 linhas)
-│   ├── main.js               # Dark mode, reveal, gerador, toast
-│   └── favicon.svg           # Favicon SVG (cadeado roxo)
+│   ├── style.css             # Design system completo
+│   ├── main.js               # Dark mode, reveal, gerador, toast, gráficos
+│   └── favicon.svg           # Favicon SVG (cadeado laranja)
 │
-└── templates/
-    ├── base.html             # Layout: navbar, icons, skip-link, ARIA
-    ├── icons.html            # 25+ icones SVG Lucide inline
-    ├── landing.html          # Landing page completa (12 secoes)
-    ├── login.html            # Tela de login
-    ├── register.html         # Cadastro + convite
-    ├── dashboard.html        # Dashboard + Health Score
-    ├── vault.html            # Cofre com busca
-    ├── credential_form.html  # Form + gerador de senhas
-    ├── permissions.html      # Permissoes por credencial
-    ├── members.html          # Gerenciamento de membros
-    ├── logs.html             # Logs + export CSV
-    ├── profile.html          # Perfil do usuario
-    └── errors/
-        ├── 404.html
-        └── 500.html
+├── templates/
+│   ├── base.html             # Layout: navbar, ícones, skip-link, ARIA, footer
+│   ├── icons.html            # 30+ ícones SVG Lucide inline
+│   ├── landing.html          # Landing page completa (12 seções)
+│   ├── login.html            # Tela de login com ícones
+│   ├── register.html         # Cadastro + convite
+│   ├── dashboard.html        # Dashboard + Health Score + gráficos
+│   ├── vault.html            # Cofre com busca e filtro por categoria
+│   ├── credential_form.html  # Form + gerador de senhas + categoria
+│   ├── permissions.html      # Permissões por credencial
+│   ├── members.html          # Gerenciamento de membros + convite e-mail
+│   ├── logs.html             # Logs + export CSV + PDF
+│   ├── profile.html          # Perfil + ativação MFA
+│   ├── mfa_setup.html        # QR Code para Google Authenticator
+│   ├── mfa_verify.html       # Campo de código MFA no login
+│   └── errors/
+│       ├── 404.html
+│       └── 500.html
+│
+└── docs/
+    └── superpowers/specs/    # Documentos de design e especificação
 ```
 
 ---
@@ -151,36 +166,38 @@ organizations ──── users ──── access_logs
       └── credentials ─┴── credential_permissions
 ```
 
-| Tabela | Campos Principais | Relacao |
+| Tabela | Campos Principais | Relação |
 |--------|-------------------|---------|
 | `organizations` | id, name, invite_code, created_at | Tem muitos users e credentials |
-| `users` | id, name, email, password_hash, org_id, role | Pertence a uma organization |
-| `credentials` | id, org_id, name, login, encrypted_password, notes, created_by | Pertence a uma organization |
-| `credential_permissions` | id, credential_id, user_id, can_view_password | Referencia credential e user |
-| `access_logs` | id, user_id, credential_id, action, accessed_at | Referencia user e credential |
+| `users` | id, name, email, password_hash, org_id, role, mfa_enabled, totp_secret | Pertence a uma organization |
+| `credentials` | id, org_id, name, login, encrypted_password, notes, category, created_by | Pertence a uma organization |
+| `credential_permissions` | id, credential_id, user_id, can_view_password | Referência credential e user |
+| `access_logs` | id, user_id, credential_id, action, accessed_at | Referência user e credential |
 
 ---
 
-## Seguranca
+## Segurança
 
-Estas praticas nao sao opcionais — seguranca e a proposta central do Keyflow:
+Estas práticas não são opcionais — segurança é a proposta central do Keyflow:
 
-| Pratica | Implementacao |
+| Prática | Implementação |
 |---------|---------------|
 | Senha de login | bcrypt com salt (nunca texto puro) |
-| Senhas do cofre | Fernet (AES-128-CBC) via PBKDF2 com 480.000 iteracoes |
-| CSRF | Flask-WTF com token em toda requisicao POST |
-| Isolamento | Verificacao de org_id em toda query |
-| Variaveis sensiveis | .env (nunca no codigo-fonte) |
-| HTTPS | Obrigatorio em producao (Render/Railway) |
-| Sessoes | Flask-Login com cookie seguro |
-| Validacao | Backend valida todos os dados (nunca confia so no frontend) |
+| Senhas do cofre | Fernet (AES-128-CBC) via PBKDF2 com 480.000 iterações |
+| MFA | TOTP (RFC 6238) com Google Authenticator |
+| CSRF | Flask-WTF com token em toda requisição POST |
+| Isolamento | Verificação de org_id em toda query |
+| Vazamentos | API k-Anonymity do HaveIBeenPwned (senha nunca sai do servidor) |
+| Variáveis sensíveis | .env (nunca no código-fonte) |
+| HTTPS | Obrigatório em produção (Render/Railway) |
+| Sessões | Flask-Login com cookie seguro |
+| Validação | Backend valida todos os dados (nunca confia só no frontend) |
 
 ---
 
-## Deploy em Producao
+## Deploy em Produção
 
-O projeto inclui configuracao pronta:
+O projeto inclui configuração pronta:
 
 - `Procfile` — `gunicorn app:app --bind 0.0.0.0:$PORT`
 - `render.yaml` — Web service + PostgreSQL free tier
@@ -195,11 +212,12 @@ DATABASE_URL=postgresql://usuario:senha@host:5432/keyflow
 
 ## API Endpoints
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
 | GET | `/` | Landing page |
 | GET/POST | `/register` | Cadastro |
 | GET/POST | `/login` | Login |
+| GET/POST | `/login/mfa` | Verificação MFA |
 | GET | `/logout` | Logout |
 | GET | `/dashboard` | Dashboard |
 | GET | `/vault` | Cofre de senhas |
@@ -208,23 +226,29 @@ DATABASE_URL=postgresql://usuario:senha@host:5432/keyflow
 | GET/POST | `/vault/<id>/edit` | Editar credencial |
 | POST | `/vault/<id>/delete` | Deletar credencial |
 | POST | `/vault/<id>/reveal` | Revelar senha (JSON) |
-| GET/POST | `/vault/<id>/permissions` | Permissoes |
+| GET/POST | `/vault/<id>/permissions` | Permissões |
 | GET | `/members` | Lista de membros |
 | POST | `/members/<id>/remove` | Remover membro |
 | POST | `/members/<id>/reactivate` | Reativar membro |
+| POST | `/members/invite-email` | Convite por e-mail |
 | GET | `/logs` | Logs de auditoria |
 | GET | `/logs/export` | Exportar CSV |
-| GET/POST | `/profile` | Perfil do usuario |
+| GET | `/logs/export-pdf` | Relatório PDF LGPD |
+| GET/POST | `/profile` | Perfil do usuário |
+| GET/POST | `/profile/mfa/setup` | Configurar MFA |
+| POST | `/profile/mfa/disable` | Desativar MFA |
 | GET | `/api/health-score` | Health Score (JSON) |
+| GET | `/api/dashboard-stats` | Estatísticas para gráficos (JSON) |
+| GET | `/api/check-breaches` | Verificar senhas vazadas (JSON) |
 
 ---
 
-## Analise de Mercado
+## Análise de Mercado
 
 - Mercado global de gerenciamento de senhas: **~$3.5B** (2025), crescendo **~19% ao ano**
-- 70% da receita concentrada no enterprise — PMEs sao o nicho menos atendido
-- Brasil representa **45% do mercado** da America Latina em ciberseguranca
-- Nenhum player atual combina: interface simples + compartilhamento mascarado + LGPD + preco acessivel
+- 70% da receita concentrada no enterprise — PMEs são o nicho menos atendido
+- Brasil representa **45% do mercado** da América Latina em cibersegurança
+- Nenhum player atual combina: interface simples + compartilhamento mascarado + LGPD + preço acessível
 
 ---
 
@@ -232,17 +256,17 @@ DATABASE_URL=postgresql://usuario:senha@host:5432/keyflow
 
 12 integrantes organizados em 6 duplas:
 
-| Dupla | Area | Foco Tecnico |
+| Dupla | Área | Foco Técnico |
 |-------|------|-------------|
-| 1 — Produto & Pesquisa | Entrevistas, personas, validacao | Pesquisa qualitativa, Figma |
-| 2 — Design & Prototipo | Wireframes, UI, identidade visual | Figma, CSS, HTML |
-| 3 — Backend: Auth | Cadastro, login, sessoes, hash | Python, Flask, bcrypt |
-| 4 — Backend: Cofre | CRUD credenciais, permissoes, cripto | Python, Flask, SQL |
-| 5 — Backend: Logs & Org | Logs, membros, remocao de acesso | Python, Flask, SQL |
-| 6 — Pitch & Documento | Documento estrategico, slides, metricas | Storytelling, dados |
+| 1 — Produto & Pesquisa | Entrevistas, personas, validação | Pesquisa qualitativa, Figma |
+| 2 — Design & Protótipo | Wireframes, UI, identidade visual | Figma, CSS, HTML |
+| 3 — Backend: Auth | Cadastro, login, sessões, hash, MFA | Python, Flask, bcrypt, pyotp |
+| 4 — Backend: Cofre | CRUD credenciais, permissões, cripto | Python, Flask, SQL |
+| 5 — Backend: Logs & Org | Logs, membros, remoção, PDF, e-mail | Python, Flask, ReportLab |
+| 6 — Pitch & Documento | Documento estratégico, slides, métricas | Storytelling, dados |
 
 ---
 
-## Licenca
+## Licença
 
-Projeto academico dos alunos do 4o Periodo da CESAR School — Ciencia da Computacao — 2026.
+Projeto acadêmico dos alunos do 4º Período da CESAR School — Ciência da Computação — 2026.
