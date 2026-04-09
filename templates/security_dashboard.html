@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}Segurança - KeyFlow{% endblock %}
 
+{% set CAT_LABELS = {
+    'financeiro': 'Financeiro',
+    'email': 'E-mail',
+    'rede_social': 'Rede Social',
+    'cloud': 'Cloud / Dev',
+    'comunicacao': 'Comunicação',
+    'marketing': 'Marketing',
+    'outros': 'Outros'
+} %}
+
 {% block content %}
 <div class="page-header">
     <h1><svg class="icon" style="margin-right:0.5rem"><use href="#icon-shield-check"/></svg> Painel de Segurança</h1>
@@ -79,19 +89,19 @@
                 {% for p in problems %}
                 <tr class="problem-row" data-issues="{{ p.issues|join(',') }}">
                     <td><strong>{{ p.name }}</strong></td>
-                    <td>{{ p.category }}</td>
+                    <td>{{ CAT_LABELS.get(p.category, p.category) }}</td>
                     <td>
                         {% for issue in p.issues %}
                         <span class="badge badge-{{ 'danger' if issue == 'breached' else ('warning' if issue in ['reused', 'too_short'] else 'info') }}">
-                            {% if issue == 'breached' %}vazada
-                            {% elif issue == 'reused' %}reutilizada
-                            {% elif issue == 'too_short' %}curta
-                            {% elif issue == 'expired' %}expirada
-                            {% elif issue == 'missing_uppercase' %}sem maiúscula
-                            {% elif issue == 'missing_numbers' %}sem número
-                            {% elif issue == 'missing_special' %}sem especial
-                            {% else %}{{ issue }}
-                            {% endif %}
+                            {%- if issue == 'breached' %}Vazada
+                            {%- elif issue == 'reused' %}Repetida
+                            {%- elif issue == 'too_short' %}Curta
+                            {%- elif issue == 'expired' %}Expirada
+                            {%- elif issue == 'missing_uppercase' %}S/ maiúsc.
+                            {%- elif issue == 'missing_numbers' %}S/ número
+                            {%- elif issue == 'missing_special' %}S/ especial
+                            {%- else %}{{ issue }}
+                            {%- endif %}
                         </span>
                         {% endfor %}
                     </td>
@@ -135,7 +145,7 @@
             <tbody>
                 {% for policy in policies %}
                 <tr>
-                    <td><strong>{{ policy.category }}</strong></td>
+                    <td><strong>{{ CAT_LABELS.get(policy.category, policy.category) }}</strong></td>
                     <td>{{ policy.min_length }}</td>
                     <td>{{ 'Sim' if policy.require_uppercase else 'Não' }}</td>
                     <td>{{ 'Sim' if policy.require_numbers else 'Não' }}</td>

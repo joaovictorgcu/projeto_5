@@ -2601,6 +2601,16 @@ select:focus-visible {
 
 .card-header-flex h2 { margin: 0; }
 
+.badge-danger, .badge-warning, .badge-info {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    margin: 0.1rem 0;
+}
+
 .badge-danger { background: rgba(239,68,68,0.15); color: var(--red-500); }
 .badge-warning { background: rgba(234,179,8,0.15); color: #ca8a04; }
 .badge-info { background: rgba(59,130,246,0.15); color: #2563eb; }
