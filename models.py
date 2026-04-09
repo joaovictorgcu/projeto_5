@@ -81,3 +81,48 @@ class UserFavorite(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     credential_id = db.Column(db.Integer, db.ForeignKey('credentials.id'), nullable=False)
     __table_args__ = (db.UniqueConstraint('user_id', 'credential_id'),)
+
+
+class PasswordPolicy(db.Model):
+    __tablename__ = 'password_policies'
+
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    min_length = db.Column(db.Integer, default=8)
+    require_uppercase = db.Column(db.Boolean, default=True)
+    require_numbers = db.Column(db.Boolean, default=True)
+    require_special = db.Column(db.Boolean, default=False)
+    max_age_days = db.Column(db.Integer, default=365)
+    is_default = db.Column(db.Boolean, default=True)
+
+    organization = db.relationship('Organization', backref='password_policies')
+
+
+class BreachResult(db.Model):
+    __tablename__ = 'breach_results'
+
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=False)
+    credential_id = db.Column(db.Integer, db.ForeignKey('credentials.id'), nullable=False, unique=True)
+    is_breached = db.Column(db.Boolean, default=False)
+    breach_count = db.Column(db.Integer, default=0)
+    checked_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    organization = db.relationship('Organization', backref='breach_results')
+    credential = db.relationship('Credential', backref=db.backref('breach_result', uselist=False, cascade='all, delete-orphan'))
+
+
+class SecurityScore(db.Model):
+    __tablename__ = 'security_scores'
+
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    weak_count = db.Column(db.Integer, default=0)
+    reused_count = db.Column(db.Integer, default=0)
+    old_count = db.Column(db.Integer, default=0)
+    breached_count = db.Column(db.Integer, default=0)
+    recorded_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    organization = db.relationship('Organization', backref='security_scores')
