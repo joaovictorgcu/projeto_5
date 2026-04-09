@@ -53,6 +53,16 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+        # migrate: add password_changed_at if missing
+        with db.engine.connect() as conn:
+            from sqlalchemy import text
+            result = conn.execute(text("PRAGMA table_info(credentials)"))
+            cols = [row[1] for row in result]
+            if 'password_changed_at' not in cols:
+                conn.execute(text('ALTER TABLE credentials ADD COLUMN password_changed_at DATETIME'))
+                conn.execute(text('UPDATE credentials SET password_changed_at = created_at WHERE password_changed_at IS NULL'))
+                conn.commit()
+
     return app
 
 

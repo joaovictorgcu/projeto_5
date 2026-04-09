@@ -44,6 +44,7 @@ class Credential(db.Model):
     category = db.Column(db.String(30), default='outros')
     created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    password_changed_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     creator = db.relationship('User', backref='created_credentials')
     permissions = db.relationship('CredentialPermission', backref='credential',
