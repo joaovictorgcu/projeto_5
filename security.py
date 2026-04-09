@@ -61,6 +61,10 @@ def check_password_expired(password_changed_at, category, org_id):
     if password_changed_at is None:
         return False
 
+    # SQLite retorna datetimes naive — normaliza para UTC
+    if password_changed_at.tzinfo is None:
+        password_changed_at = password_changed_at.replace(tzinfo=timezone.utc)
+
     age = datetime.now(timezone.utc) - password_changed_at
     return age > timedelta(days=policy.max_age_days)
 
@@ -185,8 +189,12 @@ def maybe_save_snapshot(org_id):
             .order_by(SecurityScore.recorded_at.desc())
             .first())
 
-    if last and (datetime.now(timezone.utc) - last.recorded_at) < timedelta(hours=1):
-        return last
+    if last:
+        recorded = last.recorded_at
+        if recorded and recorded.tzinfo is None:
+            recorded = recorded.replace(tzinfo=timezone.utc)
+        if (datetime.now(timezone.utc) - recorded) < timedelta(hours=1):
+            return last
 
     data = calculate_security_score(org_id)
     snapshot = SecurityScore(
@@ -234,8 +242,12 @@ def run_breach_check_background(app, org_id):
 
             for cred in credentials:
                 existing = BreachResult.query.filter_by(credential_id=cred.id).first()
-                if existing and existing.checked_at > cutoff:
-                    continue
+                if existing and existing.checked_at:
+                    checked = existing.checked_at
+                    if checked.tzinfo is None:
+                        checked = checked.replace(tzinfo=timezone.utc)
+                    if checked > cutoff:
+                        continue
 
                 try:
                     pw = decrypt_password(cred.encrypted_password)
