@@ -315,8 +315,13 @@ select:focus-visible {
     letter-spacing: -0.5px;
 }
 
-.brand-key { color: var(--text-primary); }
-.brand-flow { color: var(--purple-600); }
+.brand-key,
+.brand-flow {
+    background: linear-gradient(135deg, #b5450a, #d06b1a, #e8a33c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
 .nav-links {
     display: flex;
@@ -433,14 +438,14 @@ select:focus-visible {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--purple-600), var(--purple-700));
+    background: linear-gradient(135deg, #c2410c, #d06b1a, #e8a33c);
     color: white;
-    box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+    box-shadow: 0 2px 8px rgba(181, 69, 10, 0.3);
 }
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--purple-500), var(--purple-600));
+    background: linear-gradient(135deg, #b5450a, #c2410c, #d06b1a);
     color: white;
-    box-shadow: 0 4px 16px rgba(234, 88, 12, 0.4);
+    box-shadow: 0 4px 16px rgba(181, 69, 10, 0.4);
     transform: translateY(-1px);
 }
 
@@ -1331,7 +1336,7 @@ select:focus-visible {
 .hero {
     text-align: center;
     padding: 7rem 2rem 5.5rem;
-    background: linear-gradient(160deg, var(--purple-50) 0%, white 35%, rgba(249,115,22,0.04) 70%, var(--purple-50) 100%);
+    background: linear-gradient(160deg, #fff7ed 0%, white 35%, rgba(232,163,60,0.06) 70%, #fff7ed 100%);
     border-radius: var(--radius-xl);
     margin-bottom: 4rem;
     position: relative;
@@ -1348,19 +1353,19 @@ select:focus-visible {
 }
 .hero-orb-1 {
     width: 500px; height: 500px;
-    background: rgba(249,115,22,0.12);
+    background: rgba(208,107,26,0.12);
     top: -15%; left: -10%;
     animation: orbFloat1 12s ease-in-out infinite;
 }
 .hero-orb-2 {
     width: 400px; height: 400px;
-    background: rgba(234,88,12,0.08);
+    background: rgba(181,69,10,0.08);
     bottom: -20%; right: -5%;
     animation: orbFloat2 10s ease-in-out infinite;
 }
 .hero-orb-3 {
     width: 300px; height: 300px;
-    background: rgba(251,146,60,0.10);
+    background: rgba(232,163,60,0.10);
     top: 30%; left: 50%;
     animation: orbFloat3 14s ease-in-out infinite;
 }
@@ -1388,9 +1393,9 @@ select:focus-visible {
     gap: 0.4rem;
     padding: 0.4rem 1rem;
     border-radius: 100px;
-    background: rgba(249,115,22,0.08);
-    border: 1px solid rgba(249,115,22,0.2);
-    color: var(--purple-600);
+    background: rgba(208,107,26,0.08);
+    border: 1px solid rgba(208,107,26,0.2);
+    color: #c2410c;
     font-size: 0.8rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
@@ -1411,7 +1416,7 @@ select:focus-visible {
 
 .hero-subtitle {
     font-size: 1.35rem;
-    color: var(--purple-500);
+    color: #c2410c;
     font-weight: 600;
     margin-bottom: 1.25rem;
     position: relative;
