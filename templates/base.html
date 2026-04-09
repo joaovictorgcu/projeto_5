@@ -38,6 +38,11 @@
                 <a href="{{ url_for('org.logs') }}" class="nav-link {% if request.endpoint == 'org.logs' %}active{% endif %}" role="menuitem">
                     <svg class="icon icon-nav"><use href="#icon-clipboard"/></svg> Logs
                 </a>
+                {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('org.security_dashboard') }}" class="nav-link {% if request.endpoint == 'org.security_dashboard' %}active{% endif %}" role="menuitem">
+                    <svg class="icon icon-nav"><use href="#icon-shield-check"/></svg> Segurança
+                </a>
+                {% endif %}
             </div>
             <div class="nav-user">
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema claro/escuro" title="Alternar tema">
