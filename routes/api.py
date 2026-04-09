@@ -165,3 +165,38 @@ def check_breaches():
         'breached': len(results),
         'results': results
     })
+
+
+@api.route('/api/security-score')
+@login_required
+def security_score():
+    if current_user.role != 'admin':
+        return jsonify({'error': 'Acesso negado'}), 403
+
+    org = current_user.organization
+    if not org:
+        return jsonify({'score': 0})
+
+    from security import calculate_security_score
+    from models import SecurityScore
+
+    data = calculate_security_score(org.id)
+
+    thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
+    snapshots = (SecurityScore.query
+                 .filter_by(org_id=org.id)
+                 .filter(SecurityScore.recorded_at >= thirty_days_ago)
+                 .order_by(SecurityScore.recorded_at)
+                 .all())
+
+    return jsonify({
+        'score': data['score'],
+        'weak_count': data['weak_count'],
+        'reused_count': data['reused_count'],
+        'old_count': data['old_count'],
+        'breached_count': data['breached_count'],
+        'evolution': [
+            {'date': s.recorded_at.strftime('%d/%m'), 'score': s.score}
+            for s in snapshots
+        ]
+    })

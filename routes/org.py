@@ -51,6 +51,129 @@ def dashboard():
                            members=members)
 
 
+# ─── Segurança ─────────────────────────────────────────────────
+@org.route('/dashboard/security')
+@login_required
+def security_dashboard():
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem acessar o painel de segurança.', 'error')
+        return redirect(url_for('vault.index'))
+
+    organization = current_user.organization
+    if not organization:
+        flash('Você não pertence a nenhuma organização.', 'error')
+        return redirect(url_for('org.landing'))
+
+    from security import ensure_default_policies, calculate_security_score, maybe_save_snapshot
+    from models import PasswordPolicy, SecurityScore, BreachResult
+
+    ensure_default_policies(organization.id)
+    score_data = calculate_security_score(organization.id)
+    maybe_save_snapshot(organization.id)
+
+    policies = PasswordPolicy.query.filter_by(org_id=organization.id).order_by(PasswordPolicy.category).all()
+
+    from datetime import timedelta
+    thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
+    snapshots = (SecurityScore.query
+                 .filter_by(org_id=organization.id)
+                 .filter(SecurityScore.recorded_at >= thirty_days_ago)
+                 .order_by(SecurityScore.recorded_at)
+                 .all())
+
+    total_creds = Credential.query.filter_by(org_id=organization.id).count()
+    total_checked = BreachResult.query.filter_by(org_id=organization.id).count()
+    breach_in_progress = total_checked < total_creds and total_creds > 0
+
+    return render_template('security_dashboard.html',
+                           org=organization,
+                           score=score_data['score'],
+                           weak_count=score_data['weak_count'],
+                           reused_count=score_data['reused_count'],
+                           old_count=score_data['old_count'],
+                           breached_count=score_data['breached_count'],
+                           problems=score_data['problems'],
+                           policies=policies,
+                           snapshots=snapshots,
+                           breach_in_progress=breach_in_progress)
+
+
+@org.route('/dashboard/security/policy/<int:policy_id>/edit', methods=['POST'])
+@login_required
+def policy_edit(policy_id):
+    if current_user.role != 'admin':
+        flash('Acesso negado.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
+    from models import PasswordPolicy
+    policy = PasswordPolicy.query.get_or_404(policy_id)
+    if policy.org_id != current_user.org_id:
+        flash('Acesso negado.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
+    policy.min_length = int(request.form.get('min_length', 8))
+    policy.require_uppercase = request.form.get('require_uppercase') == 'on'
+    policy.require_numbers = request.form.get('require_numbers') == 'on'
+    policy.require_special = request.form.get('require_special') == 'on'
+    policy.max_age_days = int(request.form.get('max_age_days', 365))
+    policy.is_default = False
+
+    db.session.commit()
+    flash('Política atualizada.', 'success')
+    return redirect(url_for('org.security_dashboard'))
+
+
+@org.route('/dashboard/security/policy/new', methods=['POST'])
+@login_required
+def policy_new():
+    if current_user.role != 'admin':
+        flash('Acesso negado.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
+    from models import PasswordPolicy
+    category = request.form.get('category', '').strip().lower()
+    if not category:
+        flash('Informe o nome da categoria.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
+    existing = PasswordPolicy.query.filter_by(org_id=current_user.org_id, category=category).first()
+    if existing:
+        flash('Já existe uma política para essa categoria.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
+    policy = PasswordPolicy(
+        org_id=current_user.org_id,
+        category=category,
+        min_length=int(request.form.get('min_length', 8)),
+        require_uppercase=request.form.get('require_uppercase') == 'on',
+        require_numbers=request.form.get('require_numbers') == 'on',
+        require_special=request.form.get('require_special') == 'on',
+        max_age_days=int(request.form.get('max_age_days', 365)),
+        is_default=False
+    )
+    db.session.add(policy)
+    db.session.commit()
+    flash('Nova política criada.', 'success')
+    return redirect(url_for('org.security_dashboard'))
+
+
+@org.route('/dashboard/security/policy/restore', methods=['POST'])
+@login_required
+def policy_restore_defaults():
+    if current_user.role != 'admin':
+        flash('Acesso negado.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
+    from models import PasswordPolicy
+    PasswordPolicy.query.filter_by(org_id=current_user.org_id).delete()
+    db.session.commit()
+
+    from security import ensure_default_policies
+    ensure_default_policies(current_user.org_id)
+    flash('Políticas restauradas para os padrões.', 'success')
+    return redirect(url_for('org.security_dashboard'))
+
+
 # ─── Membros ────────────────────────────────────────────────────
 @org.route('/members')
 @login_required
