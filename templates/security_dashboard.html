@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% block title %}Segurança - KeyFlow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><svg class="icon" style="margin-right:0.5rem"><use href="#icon-shield-check"/></svg> Painel de Segurança</h1>
+    <p class="text-muted">Visão consolidada da postura de segurança da organização {{ org.name }}.</p>
+</div>
+
+{# ── Bloco 1: Score Geral ────────────────────────────────── #}
+<section class="security-score-section">
+    <div class="score-main">
+        <div class="score-circle score-{{ 'green' if score > 80 else ('yellow' if score >= 50 else 'red') }}">
+            <span class="score-value">{{ score }}</span>
+            <span class="score-label">/ 100</span>
+        </div>
+    </div>
+    <div class="score-cards">
+        <div class="mini-card mini-card-weak">
+            <span class="mini-card-count">{{ weak_count }}</span>
+            <span class="mini-card-label">Fracas</span>
+        </div>
+        <div class="mini-card mini-card-reused">
+            <span class="mini-card-count">{{ reused_count }}</span>
+            <span class="mini-card-label">Reutilizadas</span>
+        </div>
+        <div class="mini-card mini-card-old">
+            <span class="mini-card-count">{{ old_count }}</span>
+            <span class="mini-card-label">Expiradas</span>
+        </div>
+        <div class="mini-card mini-card-breached">
+            <span class="mini-card-count">{{ breached_count }}</span>
+            <span class="mini-card-label">Vazadas</span>
+        </div>
+    </div>
+</section>
+
+{# Gráfico de evolução #}
+<section class="card" style="margin-top:1.5rem;">
+    <h2>Evolução do Score (30 dias)</h2>
+    {% if snapshots|length > 1 %}
+    <canvas id="scoreChart" height="80"></canvas>
+    {% else %}
+    <p class="text-muted">Dados insuficientes para exibir o gráfico. Continue acessando esta página para acumular histórico.</p>
+    {% endif %}
+</section>
+
+{# ── Bloco 2: Lista de Problemas ─────────────────────────── #}
+<section class="card" style="margin-top:1.5rem;">
+    <div class="card-header-flex">
+        <h2>Credenciais com Problemas</h2>
+        {% if breach_in_progress %}
+        <span class="badge badge-warning">
+            <svg class="icon icon-sm spin"><use href="#icon-loader"/></svg>
+            Verificação de vazamentos em andamento...
+        </span>
+        {% endif %}
+    </div>
+
+    {% if problems %}
+    <div class="problems-filters" style="margin-bottom:1rem;">
+        <button class="btn btn-sm btn-outline filter-btn active" data-filter="all">Todos</button>
+        <button class="btn btn-sm btn-outline filter-btn" data-filter="breached">Vazadas</button>
+        <button class="btn btn-sm btn-outline filter-btn" data-filter="reused">Reutilizadas</button>
+        <button class="btn btn-sm btn-outline filter-btn" data-filter="too_short">Fracas</button>
+        <button class="btn btn-sm btn-outline filter-btn" data-filter="expired">Expiradas</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Serviço</th>
+                    <th>Categoria</th>
+                    <th>Problemas</th>
+                    <th>Criada em</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in problems %}
+                <tr class="problem-row" data-issues="{{ p.issues|join(',') }}">
+                    <td><strong>{{ p.name }}</strong></td>
+                    <td>{{ p.category }}</td>
+                    <td>
+                        {% for issue in p.issues %}
+                        <span class="badge badge-{{ 'danger' if issue == 'breached' else ('warning' if issue in ['reused', 'too_short'] else 'info') }}">
+                            {% if issue == 'breached' %}vazada
+                            {% elif issue == 'reused' %}reutilizada
+                            {% elif issue == 'too_short' %}curta
+                            {% elif issue == 'expired' %}expirada
+                            {% elif issue == 'missing_uppercase' %}sem maiúscula
+                            {% elif issue == 'missing_numbers' %}sem número
+                            {% elif issue == 'missing_special' %}sem especial
+                            {% else %}{{ issue }}
+                            {% endif %}
+                        </span>
+                        {% endfor %}
+                    </td>
+                    <td>{{ p.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">Nenhum problema encontrado. Todas as credenciais estão em conformidade!</p>
+    {% endif %}
+</section>
+
+{# ── Bloco 3: Políticas ──────────────────────────────────── #}
+<section class="card" style="margin-top:1.5rem;">
+    <div class="card-header-flex">
+        <h2>Políticas de Senha</h2>
+        <div>
+            <button class="btn btn-sm btn-primary" onclick="document.getElementById('modal-new-policy').classList.add('active')">Nova Categoria</button>
+            <form method="POST" action="{{ url_for('org.policy_restore_defaults') }}" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-sm btn-outline" onclick="return confirm('Restaurar todas as políticas para os padrões?')">Restaurar Padrões</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Mín. Chars</th>
+                    <th>Maiúsculas</th>
+                    <th>Números</th>
+                    <th>Especiais</th>
+                    <th>Rotação (dias)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for policy in policies %}
+                <tr>
+                    <td><strong>{{ policy.category }}</strong></td>
+                    <td>{{ policy.min_length }}</td>
+                    <td>{{ 'Sim' if policy.require_uppercase else 'Não' }}</td>
+                    <td>{{ 'Sim' if policy.require_numbers else 'Não' }}</td>
+                    <td>{{ 'Sim' if policy.require_special else 'Não' }}</td>
+                    <td>{{ policy.max_age_days }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="openEditPolicy({{ policy.id }}, '{{ policy.category }}', {{ policy.min_length }}, {{ policy.require_uppercase|lower }}, {{ policy.require_numbers|lower }}, {{ policy.require_special|lower }}, {{ policy.max_age_days }})">Editar</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{# ── Modal: Editar Política ──────────────────────────────── #}
+<div class="modal-overlay" id="modal-edit-policy">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Editar Política: <span id="edit-policy-cat"></span></h3>
+            <button class="modal-close" onclick="document.getElementById('modal-edit-policy').classList.remove('active')">&times;</button>
+        </div>
+        <form method="POST" id="edit-policy-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label>Comprimento mínimo</label>
+                <input type="number" name="min_length" id="edit-min-length" min="1" max="128" class="form-control">
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="require_uppercase" id="edit-uppercase"> Exigir maiúsculas</label>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="require_numbers" id="edit-numbers"> Exigir números</label>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="require_special" id="edit-special"> Exigir caracteres especiais</label>
+            </div>
+            <div class="form-group">
+                <label>Rotação (dias)</label>
+                <input type="number" name="max_age_days" id="edit-max-age" min="1" max="9999" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+    </div>
+</div>
+
+{# ── Modal: Nova Política ────────────────────────────────── #}
+<div class="modal-overlay" id="modal-new-policy">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Nova Política</h3>
+            <button class="modal-close" onclick="document.getElementById('modal-new-policy').classList.remove('active')">&times;</button>
+        </div>
+        <form method="POST" action="{{ url_for('org.policy_new') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label>Nome da categoria (slug)</label>
+                <input type="text" name="category" class="form-control" required placeholder="ex: vpn">
+            </div>
+            <div class="form-group">
+                <label>Comprimento mínimo</label>
+                <input type="number" name="min_length" value="8" min="1" max="128" class="form-control">
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="require_uppercase" checked> Exigir maiúsculas</label>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="require_numbers" checked> Exigir números</label>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" name="require_special"> Exigir caracteres especiais</label>
+            </div>
+            <div class="form-group">
+                <label>Rotação (dias)</label>
+                <input type="number" name="max_age_days" value="365" min="1" max="9999" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Criar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script>
+// ── Gráfico de evolução ──
+{% if snapshots|length > 1 %}
+const ctx = document.getElementById('scoreChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [{% for s in snapshots %}'{{ s.recorded_at.strftime("%d/%m") }}'{% if not loop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Score',
+            data: [{% for s in snapshots %}{{ s.score }}{% if not loop.last %},{% endif %}{% endfor %}],
+            borderColor: '#ea580c',
+            backgroundColor: 'rgba(234,88,12,0.1)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { min: 0, max: 100 } },
+        plugins: { legend: { display: false } }
+    }
+});
+{% endif %}
+
+// ── Filtros de problemas ──
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.problem-row').forEach(row => {
+            if (filter === 'all') {
+                row.style.display = '';
+            } else {
+                row.style.display = row.dataset.issues.includes(filter) ? '' : 'none';
+            }
+        });
+    });
+});
+
+// ── Modal editar política ──
+function openEditPolicy(id, category, minLen, upper, numbers, special, maxAge) {
+    document.getElementById('edit-policy-cat').textContent = category;
+    document.getElementById('edit-policy-form').action = `/dashboard/security/policy/${id}/edit`;
+    document.getElementById('edit-min-length').value = minLen;
+    document.getElementById('edit-uppercase').checked = upper;
+    document.getElementById('edit-numbers').checked = numbers;
+    document.getElementById('edit-special').checked = special;
+    document.getElementById('edit-max-age').value = maxAge;
+    document.getElementById('modal-edit-policy').classList.add('active');
+}
+</script>
+{% endblock %}
