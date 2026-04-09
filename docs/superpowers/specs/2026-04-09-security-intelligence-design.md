@@ -8,7 +8,7 @@
 
 ## Contexto
 
-O Keyflow já possui checagem pontual de vazamentos (`/api/breach-check`) e análise de força de senha (`/api/health-score`), mas essas funcionalidades são reativas e isoladas. O admin não tem uma visão consolidada da postura de segurança da organização.
+O Keyflow já possui checagem pontual de vazamentos (`/api/check-breaches`) e análise de força de senha (`/api/health-score`), mas essas funcionalidades são reativas e isoladas. O admin não tem uma visão consolidada da postura de segurança da organização.
 
 Este design cria um sistema integrado de inteligência de segurança que responde à pergunta: **"como está a segurança da minha org?"** em uma única página.
 
@@ -28,6 +28,10 @@ Este design cria um sistema integrado de inteligência de segurança que respond
 
 ## 1. Modelos de dados
 
+### Alteração no modelo existente: Credential
+
+Adicionar campo `password_changed_at` (DateTime) ao modelo `Credential`. Inicializado com `created_at` na migração de dados existentes. Atualizado automaticamente sempre que a senha é editada em `vault.py`. Necessário para calcular expiração de senha com precisão.
+
 ### PasswordPolicy
 
 Regras de senha por categoria, vinculadas à organização.
@@ -36,7 +40,7 @@ Regras de senha por categoria, vinculadas à organização.
 |-------|------|-----------|
 | `id` | Integer, PK | Identificador |
 | `org_id` | Integer, FK(Organization) | Organização dona da política |
-| `category` | String(50) | Nome da categoria (ex: "Bancário") |
+| `category` | String(50) | Slug da categoria (ex: `financeiro`) — deve corresponder aos valores usados em `Credential.category` |
 | `min_length` | Integer | Comprimento mínimo da senha |
 | `require_uppercase` | Boolean | Exige letra maiúscula |
 | `require_numbers` | Boolean | Exige número |
@@ -52,10 +56,12 @@ Cache dos resultados de checagem contra o HaveIBeenPwned.
 |-------|------|-----------|
 | `id` | Integer, PK | Identificador |
 | `org_id` | Integer, FK(Organization) | Organização |
-| `credential_id` | Integer, FK(Credential) | Credencial verificada |
+| `credential_id` | Integer, FK(Credential), unique | Credencial verificada (unique constraint — upsert ao recheckar) |
 | `is_breached` | Boolean | Se apareceu em vazamento |
 | `breach_count` | Integer | Quantidade de vazamentos encontrados |
 | `checked_at` | DateTime | Quando foi verificada |
+
+**Cascade:** `BreachResult` deve ter `cascade='all, delete-orphan'` no relationship do `Credential`, para ser removido automaticamente quando a credencial é deletada.
 
 ### SecurityScore
 
@@ -78,15 +84,19 @@ Snapshot do score da organização para evolução temporal.
 
 ### Defaults pré-definidos
 
-Criados automaticamente no registro da organização.
+Criados automaticamente no registro da organização. Para orgs existentes, as políticas são criadas no primeiro acesso a `/dashboard/security` (lazy creation).
 
-| Categoria | Min. chars | Maiúsculas | Números | Especiais | Rotação |
-|-----------|-----------|------------|---------|-----------|---------|
-| Bancário / Financeiro | 16 | sim | sim | sim | 60 dias |
-| Email | 12 | sim | sim | sim | 90 dias |
-| Redes Sociais | 10 | sim | sim | não | 180 dias |
-| Desenvolvimento | 14 | sim | sim | sim | 90 dias |
-| Outros | 8 | sim | sim | não | 365 dias |
+Os slugs de categoria correspondem aos valores já usados no `Credential.category` do projeto:
+
+| Slug (`category`) | Label exibido | Min. chars | Maiúsculas | Números | Especiais | Rotação |
+|--------------------|---------------|-----------|------------|---------|-----------|---------|
+| `financeiro` | Financeiro | 16 | sim | sim | sim | 60 dias |
+| `email` | Email | 12 | sim | sim | sim | 90 dias |
+| `rede_social` | Rede Social | 10 | sim | sim | não | 180 dias |
+| `cloud` | Cloud / Dev | 14 | sim | sim | sim | 90 dias |
+| `comunicacao` | Comunicação | 10 | sim | sim | não | 180 dias |
+| `marketing` | Marketing | 10 | sim | sim | não | 180 dias |
+| `outros` | Outros | 8 | sim | sim | não | 365 dias |
 
 ### Validação
 
@@ -107,9 +117,9 @@ Criados automaticamente no registro da organização.
 ### Fluxo
 
 1. Admin faz login com sucesso (após MFA se habilitado).
-2. Sistema dispara checagem em **background thread** (mesmo padrão do Flask-Mail existente).
+2. Sistema dispara checagem em **background thread** (mesmo padrão do Flask-Mail em `routes/org.py`). A thread deve receber `app._get_current_object()` e abrir `app_context()` internamente, pois precisa de acesso ao banco para ler credenciais e gravar `BreachResult`.
 3. Para cada credencial da org, verifica se existe `BreachResult` com menos de 24h.
-4. Credenciais sem resultado recente são checadas via API HaveIBeenPwned (k-anonymity SHA prefix, lógica já existente em `/api/breach-check`).
+4. Credenciais sem resultado recente são checadas via API HaveIBeenPwned (k-anonymity SHA prefix, lógica já existente em `/api/check-breaches`).
 5. Resultados salvos/atualizados na tabela `BreachResult`.
 
 ### Rate limiting da API HIBP
@@ -179,6 +189,14 @@ Criados automaticamente no registro da organização.
 ### Novo endpoint
 
 - `GET /api/security-score` — retorna score atual + dados de evolução em JSON para o Chart.js.
+
+### Relação com `/api/health-score` existente
+
+O endpoint `/api/health-score` existente será **mantido** — ele fornece uma análise de força por credencial individual (usado internamente). O novo `/api/security-score` é uma visão agregada da organização com fatores adicionais (vazamentos, políticas, evolução temporal). Não há conflito: um é per-credential, o outro é per-org.
+
+### Nota sobre performance
+
+O cálculo do score envolve descriptografar senhas para detectar reutilização. Para orgs com até ~200 credenciais isso é aceitável (<1s). O snapshot de 1h de cache evita recalcular a cada page load.
 
 ---
 
