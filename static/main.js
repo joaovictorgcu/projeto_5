@@ -284,18 +284,47 @@ function animateCounters() {
 
 /* ─── Intersection Observer for Animations ──────────────────── */
 function setupScrollAnimations() {
-    var observer = new IntersectionObserver(function(entries) {
+    // Section-level reveal (titles + subtitles)
+    var sectionObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
+                entry.target.classList.add('revealed');
+                sectionObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal-section').forEach(function(section) {
+        sectionObserver.observe(section);
+    });
+
+    // Item-level reveal (cards, stats, etc.)
+    var itemObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                itemObserver.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.feature-card, .step-card, .pricing-card, .stat-card').forEach(function(el) {
+    document.querySelectorAll('.reveal-item').forEach(function(el) {
+        itemObserver.observe(el);
+    });
+
+    // Legacy: individual card animations for non-reveal elements
+    var cardObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                cardObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .step-card, .pricing-card, .stat-card, .solution-card, .audience-card').forEach(function(el) {
         el.style.opacity = '0';
-        observer.observe(el);
+        cardObserver.observe(el);
     });
 }
 

@@ -5,7 +5,16 @@
 <div class="landing">
     <!-- Hero -->
     <section class="hero">
+        <div class="hero-orbs">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+        </div>
         <div class="hero-content">
+            <div class="hero-badge">
+                <svg class="icon icon-sm"><use href="#icon-shield-check"/></svg>
+                Criptografia ponta a ponta
+            </div>
             <h1><span class="brand-key">key</span><span class="brand-flow">flow</span></h1>
             <p class="hero-subtitle">Cofre de Senhas Colaborativo para Pequenas Equipes</p>
             <p class="hero-desc">
@@ -16,37 +25,53 @@
                 <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Criar conta grátis</a>
                 <a href="{{ url_for('auth.login') }}" class="btn btn-outline btn-lg">Entrar</a>
             </div>
-            <p class="hero-trust">Sem cartão de crédito. Pronto em 2 minutos. Dados criptografados.</p>
+            <div class="hero-trust-bar">
+                <div class="trust-item">
+                    <svg class="icon icon-sm"><use href="#icon-check"/></svg>
+                    Sem cartão de crédito
+                </div>
+                <div class="trust-item">
+                    <svg class="icon icon-sm"><use href="#icon-zap"/></svg>
+                    Pronto em 2 minutos
+                </div>
+                <div class="trust-item">
+                    <svg class="icon icon-sm"><use href="#icon-lock"/></svg>
+                    Dados criptografados
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- O Problema -->
-    <section class="landing-section">
+    <section class="landing-section reveal-section">
         <h2 class="section-title">O problema que ninguém resolve</h2>
         <p class="section-subtitle">Em agências digitais e pequenas empresas, o ciclo se repete todos os dias:</p>
-        <div class="problem-grid">
-            <div class="problem-card">
+        <div class="problem-timeline">
+            <div class="problem-card reveal-item">
                 <div class="problem-number">1</div>
                 <p>Alguém cria uma conta em uma ferramenta nova</p>
             </div>
-            <div class="problem-card">
+            <div class="problem-connector"></div>
+            <div class="problem-card reveal-item">
                 <div class="problem-number">2</div>
                 <p>Manda a senha pelo <strong>WhatsApp</strong> para o time</p>
             </div>
-            <div class="problem-card">
+            <div class="problem-connector"></div>
+            <div class="problem-card reveal-item">
                 <div class="problem-number">3</div>
                 <p>Vários membros copiam para o celular pessoal</p>
             </div>
-            <div class="problem-card">
+            <div class="problem-connector"></div>
+            <div class="problem-card problem-card-danger reveal-item">
                 <div class="problem-number">4</div>
                 <p>Alguém sai da empresa e <strong>ninguém sabe revogar</strong> o acesso</p>
             </div>
         </div>
-        <p class="section-subtitle" style="margin-top:2rem;">Resultado: vazamentos, invasões e multas da LGPD.</p>
+        <p class="problem-result reveal-item">Resultado: vazamentos, invasões e multas da LGPD.</p>
     </section>
 
     <!-- Números do problema -->
-    <section class="landing-section">
+    <section class="landing-section section-tinted reveal-section">
         <h2 class="section-title">Os números não mentem</h2>
         <div class="stats-grid stats-highlight">
             <div class="stat-card stat-danger">
@@ -69,7 +94,7 @@
     </section>
 
     <!-- A Solução -->
-    <section class="landing-section">
+    <section class="landing-section reveal-section">
         <h2 class="section-title">Keyflow: a solução simples</h2>
         <p class="section-subtitle">Nenhum player atual combina tudo isso em uma única plataforma acessível.</p>
         <div class="solution-grid">
@@ -119,7 +144,7 @@
     </section>
 
     <!-- Features detalhadas -->
-    <section class="landing-section">
+    <section class="landing-section section-tinted reveal-section">
         <h2 class="section-title">Tudo que sua equipe precisa</h2>
         <div class="features-grid">
             <div class="feature-card">
@@ -162,11 +187,16 @@
                 <h3>Relatório PDF para LGPD</h3>
                 <p>Gere um documento profissional com todo o histórico de acessos. Pronto para entregar em qualquer auditoria.</p>
             </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg class="icon-feature"><use href="#icon-folder"/></svg></div>
+                <h3>Categorias e Organização</h3>
+                <p>Organize credenciais por categoria: redes sociais, e-mail, cloud, bancos e mais. Encontre qualquer senha em segundos com busca e filtros.</p>
+            </div>
         </div>
     </section>
 
     <!-- Como funciona -->
-    <section class="landing-section">
+    <section class="landing-section reveal-section">
         <h2 class="section-title">Como funciona</h2>
         <p class="section-subtitle">4 passos para nunca mais mandar senha por WhatsApp.</p>
         <div class="steps-grid">
@@ -194,7 +224,7 @@
     </section>
 
     <!-- Comparativo -->
-    <section class="landing-section">
+    <section class="landing-section section-tinted reveal-section">
         <h2 class="section-title">Keyflow vs. o que você usa hoje</h2>
         <p class="section-subtitle">Veja como o Keyflow se compara com as alternativas do dia a dia.</p>
         <div class="comparison-table-wrapper">
@@ -250,7 +280,7 @@
     </section>
 
     <!-- Segurança -->
-    <section class="landing-section">
+    <section class="landing-section section-security reveal-section">
         <h2 class="section-title">Segurança desde a primeira linha de código</h2>
         <p class="section-subtitle">Segurança não é um recurso opcional, é a proposta central do Keyflow.</p>
         <div class="security-grid">
@@ -300,7 +330,7 @@
     </section>
 
     <!-- Mercado -->
-    <section class="landing-section">
+    <section class="landing-section reveal-section">
         <h2 class="section-title">Um mercado de bilhões</h2>
         <p class="section-subtitle">Gerenciamento de senhas é um dos segmentos de maior crescimento em cibersegurança.</p>
         <div class="stats-grid">
@@ -324,7 +354,7 @@
     </section>
 
     <!-- Público-alvo -->
-    <section class="landing-section">
+    <section class="landing-section section-tinted reveal-section">
         <h2 class="section-title">Para quem é o Keyflow?</h2>
         <div class="audience-grid">
             <div class="audience-card">
@@ -347,7 +377,7 @@
     </section>
 
     <!-- FAQ -->
-    <section class="landing-section">
+    <section class="landing-section reveal-section">
         <h2 class="section-title">Perguntas frequentes</h2>
         <div class="faq-list">
             <details class="faq-item">
@@ -390,7 +420,7 @@
     </section>
 
     <!-- Planos -->
-    <section class="landing-section">
+    <section class="landing-section section-tinted reveal-section">
         <h2 class="section-title">Planos</h2>
         <p class="section-subtitle">Comece grátis. Escale quando precisar.</p>
         <div class="pricing-grid">
@@ -459,10 +489,12 @@
     </section>
 
     <!-- CTA Final -->
-    <section class="cta">
-        <h2>Pare de mandar senha pelo WhatsApp.</h2>
-        <p>Sua equipe merece segurança de verdade. Crie sua conta em 2 minutos, convide seu time e tenha controle total sobre quem acessa o que.</p>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Comece agora, é grátis!</a>
+    <section class="cta-final reveal-section">
+        <div class="cta-final-content">
+            <h2>Pare de mandar senha pelo WhatsApp.</h2>
+            <p>Sua equipe merece segurança de verdade. Crie sua conta em 2 minutos, convide seu time e tenha controle total sobre quem acessa o que.</p>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg btn-cta-glow">Comece agora, é grátis!</a>
+        </div>
     </section>
 </div>
 {% endblock %}
