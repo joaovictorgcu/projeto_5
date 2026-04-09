@@ -2,7 +2,7 @@ import uuid
 
 import bcrypt
 import pyotp
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 
 from models import db, User, Organization
@@ -90,6 +90,9 @@ def login():
                 return redirect(url_for('auth.login_mfa'))
 
             login_user(user)
+            if user.role == 'admin' and user.org_id:
+                from security import run_breach_check_background
+                run_breach_check_background(current_app._get_current_object(), user.org_id)
             return redirect(url_for('org.dashboard'))
 
         limiter.record_failure(ip)
@@ -125,6 +128,9 @@ def login_mfa():
             if totp.verify(code, valid_window=1):
                 session.pop('mfa_user_id', None)
                 login_user(user)
+                if user.role == 'admin' and user.org_id:
+                    from security import run_breach_check_background
+                    run_breach_check_background(current_app._get_current_object(), user.org_id)
                 return redirect(url_for('org.dashboard'))
 
         flash('Código inválido. Tente novamente.', 'error')
