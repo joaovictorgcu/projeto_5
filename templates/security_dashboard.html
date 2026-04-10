@@ -162,11 +162,11 @@
 </section>
 
 {# ── Modal: Editar Política ──────────────────────────────── #}
-<div class="modal-overlay" id="modal-edit-policy">
+<div class="modal-overlay" id="modal-edit-policy" role="dialog" aria-modal="true" aria-labelledby="edit-policy-title">
     <div class="modal">
         <div class="modal-header">
-            <h3>Editar Política: <span id="edit-policy-cat"></span></h3>
-            <button class="modal-close" onclick="document.getElementById('modal-edit-policy').classList.remove('active')">&times;</button>
+            <h3 id="edit-policy-title">Editar Política: <span id="edit-policy-cat"></span></h3>
+            <button class="modal-close" onclick="document.getElementById('modal-edit-policy').classList.remove('active')" aria-label="Fechar modal">&times;</button>
         </div>
         <form method="POST" id="edit-policy-form">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -193,11 +193,11 @@
 </div>
 
 {# ── Modal: Nova Política ────────────────────────────────── #}
-<div class="modal-overlay" id="modal-new-policy">
+<div class="modal-overlay" id="modal-new-policy" role="dialog" aria-modal="true" aria-labelledby="new-policy-title">
     <div class="modal">
         <div class="modal-header">
-            <h3>Nova Política</h3>
-            <button class="modal-close" onclick="document.getElementById('modal-new-policy').classList.remove('active')">&times;</button>
+            <h3 id="new-policy-title">Nova Política</h3>
+            <button class="modal-close" onclick="document.getElementById('modal-new-policy').classList.remove('active')" aria-label="Fechar modal">&times;</button>
         </div>
         <form method="POST" action="{{ url_for('org.policy_new') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

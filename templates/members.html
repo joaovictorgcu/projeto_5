@@ -91,6 +91,12 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if not members %}
+        <div class="empty-state" style="padding:2rem;text-align:center">
+            <svg class="icon" style="width:32px;height:32px;color:var(--text-muted);margin-bottom:0.5rem"><use href="#icon-users"/></svg>
+            <p style="color:var(--text-muted);font-size:0.9rem">Nenhum membro na organização ainda.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
