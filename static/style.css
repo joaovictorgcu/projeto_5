@@ -1501,7 +1501,10 @@ select:focus-visible {
 /* ─── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .dashboard-grid { grid-template-columns: 1fr; }
-    .pricing-grid { grid-template-columns: 1fr 1fr; }
+    .credentials-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .score-cards { grid-template-columns: repeat(2, 1fr); }
+    .table { font-size: 0.8rem; }
+    .table th, .table td { padding: 0.6rem 0.75rem; }
 }
 
 @media (max-width: 640px) {
