@@ -1,8 +1,8 @@
-# Keyflow
+# KeyFlow
 
 **Cofre de senhas colaborativo para pequenas equipes.**
 
-Sabe quando alguém manda a senha do Instagram da empresa pelo WhatsApp, três pessoas copiam pro celular pessoal, e quando o estagiário sai ninguém sabe revogar o acesso? O Keyflow resolve isso.
+Sabe quando alguém manda a senha do Instagram da empresa pelo WhatsApp, três pessoas copiam pro celular pessoal, e quando o estagiário sai ninguém sabe revogar o acesso? O KeyFlow resolve isso.
 
 É uma plataforma web onde sua equipe cadastra, compartilha e controla credenciais de forma segura — com log de tudo que acontece, pronto pra qualquer auditoria da LGPD.
 
@@ -30,7 +30,7 @@ Sabe quando alguém manda a senha do Instagram da empresa pelo WhatsApp, três p
 
 **Extras** — Dark mode, favoritar credenciais, atalhos de teclado (Ctrl+K pra buscar), tour guiado pra quem acabou de entrar, páginas de erro estilizadas e sistema de ícones SVG.
 
-**Landing page completa** — Página institucional com seções de problema, solução, features, comparativo com concorrentes, segurança, dados de mercado, público-alvo, FAQ interativo e planos de preços.
+**Landing page original** — Página institucional com simulação de chat WhatsApp no hero mostrando o problema real, comparação visual antes/depois, features em layout bento grid assimétrico, seção de segurança com terminal estético, público-alvo, FAQ interativo e planos de preços. Navbar própria com scroll suave entre seções.
 
 ---
 
@@ -72,7 +72,7 @@ routes/
 └── api.py     → endpoints JSON (health score, stats, vazamentos, security score)
 
 templates/
-├── landing.html              → página institucional com pricing e FAQ
+├── landing.html              → landing page com chat WhatsApp, bento grid e terminal
 ├── vault.html                → cofre de credenciais
 ├── dashboard.html            → painel com gráficos
 ├── security_dashboard.html   → painel de segurança (admin)
@@ -92,14 +92,14 @@ Outros arquivos importantes:
 - `rate_limit.py` — proteção brute force no login
 - `crypto_utils.py` — criptografia Fernet para o cofre
 - `seed.py` — dados de demonstração para desenvolvimento
-- `static/style.css` — design system completo com dark mode
-- `static/main.js` — dark mode, reveal, gerador, gráficos, atalhos
+- `static/style.css` — design system completo com dark mode + landing page v2
+- `static/main.js` — dark mode, reveal, gerador, gráficos, atalhos, animações da landing
 
 ---
 
 ## Segurança
 
-Segurança é a proposta central do Keyflow. Não é opcional:
+Segurança é a proposta central do KeyFlow. Não é opcional:
 
 - Senhas de login: **bcrypt com salt** (nunca texto puro)
 - Senhas do cofre: **Fernet (AES-128-CBC)** com PBKDF2 e 480.000 iterações
