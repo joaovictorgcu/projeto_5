@@ -41,6 +41,14 @@ def credential_new():
             flash('Preencha nome, login e senha.', 'error')
             return render_template('credential_form.html', editing=False)
 
+        if len(name) > 200 or len(login_val) > 200:
+            flash('Nome e login devem ter no máximo 200 caracteres.', 'error')
+            return render_template('credential_form.html', editing=False)
+
+        if len(password) > 500:
+            flash('Senha muito longa (máximo 500 caracteres).', 'error')
+            return render_template('credential_form.html', editing=False)
+
         cred = Credential(
             org_id=current_user.org_id,
             name=name,
@@ -113,7 +121,7 @@ def credential_reveal(cred_id):
         perm = CredentialPermission.query.filter_by(
             credential_id=cred.id, user_id=current_user.id
         ).first()
-        if perm and not perm.can_view_password:
+        if not perm or not perm.can_view_password:
             return jsonify({'error': 'Você não tem permissão para ver esta senha'}), 403
 
     _log(current_user.id, cred.id, 'visualizou senha')

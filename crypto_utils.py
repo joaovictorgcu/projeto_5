@@ -1,3 +1,4 @@
+import hashlib
 import os
 import base64
 from cryptography.fernet import Fernet
@@ -8,10 +9,11 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 def _get_fernet():
     """Gera chave Fernet a partir da SECRET_KEY do ambiente."""
     secret = os.getenv('SECRET_KEY', 'dev-key-troque-em-producao').encode()
+    salt = os.getenv('FERNET_SALT', '').encode() or hashlib.sha256(secret).digest()[:16]
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
-        salt=b'keyflow-salt-fixo',
+        salt=salt,
         iterations=480000,
     )
     key = base64.urlsafe_b64encode(kdf.derive(secret))

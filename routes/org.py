@@ -111,11 +111,18 @@ def policy_edit(policy_id):
         flash('Acesso negado.', 'error')
         return redirect(url_for('org.security_dashboard'))
 
-    policy.min_length = int(request.form.get('min_length', 8))
+    try:
+        min_len = max(4, min(128, int(request.form.get('min_length', 8))))
+        max_age = max(1, min(3650, int(request.form.get('max_age_days', 365))))
+    except (ValueError, TypeError):
+        flash('Valores inválidos.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
+    policy.min_length = min_len
     policy.require_uppercase = request.form.get('require_uppercase') == 'on'
     policy.require_numbers = request.form.get('require_numbers') == 'on'
     policy.require_special = request.form.get('require_special') == 'on'
-    policy.max_age_days = int(request.form.get('max_age_days', 365))
+    policy.max_age_days = max_age
     policy.is_default = False
 
     db.session.commit()
@@ -141,14 +148,21 @@ def policy_new():
         flash('Já existe uma política para essa categoria.', 'error')
         return redirect(url_for('org.security_dashboard'))
 
+    try:
+        min_len = max(4, min(128, int(request.form.get('min_length', 8))))
+        max_age = max(1, min(3650, int(request.form.get('max_age_days', 365))))
+    except (ValueError, TypeError):
+        flash('Valores inválidos.', 'error')
+        return redirect(url_for('org.security_dashboard'))
+
     policy = PasswordPolicy(
         org_id=current_user.org_id,
         category=category,
-        min_length=int(request.form.get('min_length', 8)),
+        min_length=min_len,
         require_uppercase=request.form.get('require_uppercase') == 'on',
         require_numbers=request.form.get('require_numbers') == 'on',
         require_special=request.form.get('require_special') == 'on',
-        max_age_days=int(request.form.get('max_age_days', 365)),
+        max_age_days=max_age,
         is_default=False
     )
     db.session.add(policy)
