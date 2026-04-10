@@ -72,7 +72,7 @@
             <div class="credential-actions">
                 <a href="{{ url_for('vault.credential_permissions', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Permissões" aria-label="Gerenciar permissões de {{ cred.name }}"><svg class="icon"><use href="#icon-users"/></svg></a>
                 <a href="{{ url_for('vault.credential_edit', cred_id=cred.id) }}" class="btn btn-sm btn-ghost" title="Editar" aria-label="Editar {{ cred.name }}"><svg class="icon"><use href="#icon-edit"/></svg></a>
-                <form method="POST" action="{{ url_for('vault.credential_delete', cred_id=cred.id) }}" class="inline-form" onsubmit="return confirm('Tem certeza que deseja deletar esta credencial?')">
+                <form method="POST" action="{{ url_for('vault.credential_delete', cred_id=cred.id) }}" class="inline-form" data-confirm="Tem certeza que deseja deletar &quot;{{ cred.name }}&quot;? Esta ação não pode ser desfeita.">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-sm btn-ghost btn-danger" title="Deletar" aria-label="Deletar {{ cred.name }}"><svg class="icon"><use href="#icon-trash"/></svg></button>
                 </form>

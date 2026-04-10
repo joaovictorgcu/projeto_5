@@ -426,6 +426,58 @@ function setupLandingV2Animations() {
     document.head.appendChild(style);
 })();
 
+/* ─── Modal de Confirmação ─────────────────────────────────── */
+var _confirmForm = null;
+
+function openConfirmModal(message, form) {
+    var modal = document.getElementById('confirm-modal');
+    if (!modal) return false;
+    document.getElementById('confirm-modal-msg').textContent = message;
+    _confirmForm = form;
+    modal.hidden = false;
+    document.getElementById('confirm-modal-ok').focus();
+}
+
+function closeConfirmModal() {
+    var modal = document.getElementById('confirm-modal');
+    if (modal) modal.hidden = true;
+    _confirmForm = null;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var okBtn = document.getElementById('confirm-modal-ok');
+    if (okBtn) {
+        okBtn.addEventListener('click', function() {
+            if (_confirmForm) {
+                _confirmForm.removeAttribute('data-confirm');
+                _confirmForm.requestSubmit();
+            }
+            closeConfirmModal();
+        });
+    }
+
+    // Intercept forms with data-confirm
+    document.addEventListener('submit', function(e) {
+        var form = e.target;
+        var msg = form.getAttribute('data-confirm');
+        if (msg) {
+            e.preventDefault();
+            openConfirmModal(msg, form);
+        }
+    });
+
+    // Close modal on overlay click or Escape
+    var overlay = document.getElementById('confirm-modal');
+    if (overlay) {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) closeConfirmModal();
+        });
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeConfirmModal();
+    });
+});
+
 /* ─── Keyboard Shortcuts ────────────────────────────────────── */
 document.addEventListener('keydown', function(e) {
     // Ignore when typing in input/textarea

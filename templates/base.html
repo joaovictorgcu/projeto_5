@@ -87,6 +87,18 @@
     </footer>
     {% endblock %}
 
+    <!-- Modal de confirmação global -->
+    <div id="confirm-modal" class="kf-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" hidden>
+        <div class="kf-modal">
+            <h3 id="confirm-modal-title">Confirmar ação</h3>
+            <p id="confirm-modal-msg"></p>
+            <div class="kf-modal-actions">
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeConfirmModal()">Cancelar</button>
+                <button type="button" class="btn btn-danger btn-sm" id="confirm-modal-ok">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
