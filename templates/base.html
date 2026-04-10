@@ -60,7 +60,7 @@
     </nav>
     {% endif %}
 
-    <main class="container" role="main" id="main-content">
+    <main class="{% block main_class %}container{% endblock %}" role="main" id="main-content">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         <div class="flash-messages" aria-live="polite">
