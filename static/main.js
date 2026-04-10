@@ -355,9 +355,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Contadores animados
     animateCounters();
 
-    // Scroll animations na landing
+    // Scroll animations na landing (v1 legacy)
     if (document.querySelector('.landing')) {
         setupScrollAnimations();
+    }
+
+    // Landing v2: re-trigger chat animation on scroll into view
+    if (document.querySelector('.landing-v2')) {
+        setupLandingV2Animations();
     }
 
     // Adicionar delay staggered nas cards
@@ -365,6 +370,61 @@ document.addEventListener('DOMContentLoaded', function() {
         card.style.animationDelay = (i * 0.05) + 's';
     });
 });
+
+/* ─── Landing v2 Animations ────────────────────────────────── */
+function setupLandingV2Animations() {
+    // Reveal sections on scroll
+    var sectionObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('lp-visible');
+                sectionObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.lp-section, .lp-stats, .lp-security, .lp-cta').forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        sectionObserver.observe(el);
+    });
+
+    // Card stagger animations
+    var cardObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('lp-visible');
+                cardObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('.lp-bento-card, .lp-plan, .lp-audience-card, .lp-sec-item, .lp-step, .lp-faq-item').forEach(function(el, i) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) ' + (i % 4 * 0.08) + 's, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) ' + (i % 4 * 0.08) + 's';
+        cardObserver.observe(el);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('.lp-nav-links a[href^="#"], a[href="#como-funciona"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            var target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+}
+
+// CSS class for visible state
+(function() {
+    var style = document.createElement('style');
+    style.textContent = '.lp-visible { opacity: 1 !important; transform: translateY(0) !important; }';
+    document.head.appendChild(style);
+})();
 
 /* ─── Keyboard Shortcuts ────────────────────────────────────── */
 document.addEventListener('keydown', function(e) {
