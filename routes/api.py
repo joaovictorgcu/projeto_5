@@ -1,13 +1,13 @@
-import hashlib
 import time
-import urllib.request
 from datetime import datetime, timezone, timedelta
 
 from flask import Blueprint, jsonify
 from flask_login import login_required, current_user
 
+from sqlalchemy.orm import joinedload
 from models import db, User, Credential, AccessLog
 from crypto_utils import decrypt_password
+from security import _check_breach_for_password
 
 api = Blueprint('api', __name__)
 
@@ -98,6 +98,7 @@ def dashboard_stats():
 
     all_logs = (AccessLog.query
                 .join(Credential)
+                .options(joinedload(AccessLog.credential))
                 .filter(Credential.org_id == org.id)
                 .all())
     actions = {}
@@ -105,14 +106,13 @@ def dashboard_stats():
         actions[log.action] = actions.get(log.action, 0) + 1
 
     cred_counts = {}
+    cred_names = {}
     for log in all_logs:
         cred_counts[log.credential_id] = cred_counts.get(log.credential_id, 0) + 1
+        if log.credential_id not in cred_names:
+            cred_names[log.credential_id] = log.credential.name if log.credential else '?'
     top_ids = sorted(cred_counts, key=cred_counts.get, reverse=True)[:5]
-    top_creds = []
-    for cid in top_ids:
-        cred = Credential.query.get(cid)
-        if cred:
-            top_creds.append({'name': cred.name, 'count': cred_counts[cid]})
+    top_creds = [{'name': cred_names.get(cid, '?'), 'count': cred_counts[cid]} for cid in top_ids]
 
     return jsonify({
         'daily_access': [{'date': d, 'count': c} for d, c in daily.items()],
@@ -137,28 +137,13 @@ def check_breaches():
         except Exception:
             continue
 
-        sha1 = hashlib.sha1(pw.encode('utf-8')).hexdigest().upper()
-        prefix = sha1[:5]
-        suffix = sha1[5:]
-
-        try:
-            url = f'https://api.pwnedpasswords.com/range/{prefix}'
-            req = urllib.request.Request(url, headers={'User-Agent': 'Keyflow-MVP'})
-            resp = urllib.request.urlopen(req, timeout=5)
-            body = resp.read().decode('utf-8')
-
-            for line in body.splitlines():
-                hash_suffix, count = line.split(':')
-                if hash_suffix == suffix:
-                    results.append({
-                        'credential_name': cred.name,
-                        'breach_count': int(count)
-                    })
-                    break
-
-            time.sleep(0.2)
-        except Exception:
-            continue
+        is_breached, count = _check_breach_for_password(pw)
+        if is_breached:
+            results.append({
+                'credential_name': cred.name,
+                'breach_count': count
+            })
+        time.sleep(0.2)
 
     return jsonify({
         'total_checked': len(credentials),

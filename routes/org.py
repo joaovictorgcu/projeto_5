@@ -9,6 +9,7 @@ import qrcode
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, Response, current_app
 from flask_login import login_required, current_user
 
+from sqlalchemy.orm import joinedload
 from models import db, User, Organization, Credential, CredentialPermission, AccessLog
 from crypto_utils import encrypt_password, decrypt_password
 from datetime import datetime, timezone
@@ -301,6 +302,7 @@ def logs():
 
     all_logs = (AccessLog.query
                 .join(User).join(Credential)
+                .options(joinedload(AccessLog.user), joinedload(AccessLog.credential))
                 .filter(Credential.org_id == organization.id)
                 .order_by(AccessLog.accessed_at.desc())
                 .limit(200)
@@ -317,6 +319,7 @@ def logs_export():
 
     all_logs = (AccessLog.query
                 .join(User).join(Credential)
+                .options(joinedload(AccessLog.user), joinedload(AccessLog.credential))
                 .filter(Credential.org_id == organization.id)
                 .order_by(AccessLog.accessed_at.desc())
                 .all())
@@ -362,6 +365,7 @@ def logs_export_pdf():
 
     all_logs = (AccessLog.query
                 .join(User).join(Credential)
+                .options(joinedload(AccessLog.user), joinedload(AccessLog.credential))
                 .filter(Credential.org_id == organization.id,
                         AccessLog.accessed_at >= since)
                 .order_by(AccessLog.accessed_at.desc())
