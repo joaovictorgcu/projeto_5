@@ -75,19 +75,6 @@ def create_app():
     app.register_blueprint(vault)
     app.register_blueprint(api)
 
-    @app.route('/__debug_paths')
-    def _debug_paths():
-        from flask import jsonify
-        root = app.root_path
-        return jsonify({
-            'cwd': os.getcwd(),
-            'app_root': root,
-            'static_folder': app.static_folder,
-            'static_exists': os.path.isdir(app.static_folder) if app.static_folder else False,
-            'style_exists': os.path.isfile(os.path.join(app.static_folder, 'style.css')) if app.static_folder else False,
-            'root_listing': sorted(os.listdir(root))[:50] if os.path.isdir(root) else None,
-        })
-
     @app.errorhandler(404)
     def not_found(e):
         return render_template('errors/404.html'), 404
