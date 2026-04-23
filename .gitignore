@@ -6,4 +6,6 @@ instance/
 venv/
 .venv/
 seed.py
+run.py
+*.log
 .claude/

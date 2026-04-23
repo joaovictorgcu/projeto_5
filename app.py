@@ -1,14 +1,44 @@
+import os
+import uuid
 from datetime import timedelta
 
+import bcrypt
 from flask import Flask, render_template, session
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 
 from config import Config
-from models import db, User
+from models import db, User, Organization
 
 mail = Mail()
+
+
+def _bootstrap_admin():
+    """Cria admin padrão se não existir. Controlado por env vars."""
+    email = os.getenv('BOOTSTRAP_ADMIN_EMAIL', 'admin@keyflow.local')
+    password = os.getenv('BOOTSTRAP_ADMIN_PASSWORD', 'adm123')
+    org_name = os.getenv('BOOTSTRAP_ORG_NAME', 'KeyFlow Demo')
+
+    if User.query.filter_by(email=email).first():
+        return
+
+    org = Organization.query.filter_by(name=org_name).first()
+    if not org:
+        org = Organization(name=org_name, invite_code=str(uuid.uuid4())[:8])
+        db.session.add(org)
+        db.session.flush()
+
+    pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    db.session.add(User(
+        name='Admin',
+        email=email,
+        password_hash=pw_hash,
+        org_id=org.id,
+        role='admin',
+        is_active_member=True,
+    ))
+    db.session.commit()
 
 
 def create_app():
@@ -53,15 +83,18 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-        # migrate: add password_changed_at if missing
-        with db.engine.connect() as conn:
-            from sqlalchemy import text
-            result = conn.execute(text("PRAGMA table_info(credentials)"))
-            cols = [row[1] for row in result]
-            if 'password_changed_at' not in cols:
-                conn.execute(text('ALTER TABLE credentials ADD COLUMN password_changed_at DATETIME'))
-                conn.execute(text('UPDATE credentials SET password_changed_at = created_at WHERE password_changed_at IS NULL'))
-                conn.commit()
+        # migrate: add password_changed_at if missing (SQLite only — Postgres cria via db.create_all)
+        if db.engine.dialect.name == 'sqlite':
+            with db.engine.connect() as conn:
+                from sqlalchemy import text
+                result = conn.execute(text("PRAGMA table_info(credentials)"))
+                cols = [row[1] for row in result]
+                if 'password_changed_at' not in cols:
+                    conn.execute(text('ALTER TABLE credentials ADD COLUMN password_changed_at DATETIME'))
+                    conn.execute(text('UPDATE credentials SET password_changed_at = created_at WHERE password_changed_at IS NULL'))
+                    conn.commit()
+
+        _bootstrap_admin()
 
     return app
 
