@@ -41,7 +41,7 @@ def _bootstrap_admin():
     db.session.commit()
 
 
-_STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'public', 'static')
+_STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', 'static')
 
 
 def create_app():
