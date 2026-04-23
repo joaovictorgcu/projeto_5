@@ -41,8 +41,11 @@ def _bootstrap_admin():
     db.session.commit()
 
 
+_STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'public', 'static')
+
+
 def create_app():
-    app = Flask(__name__, static_folder='public/static', static_url_path='/static')
+    app = Flask(__name__, static_folder=_STATIC_DIR, static_url_path='/static')
     app.config.from_object(Config)
 
     db.init_app(app)
