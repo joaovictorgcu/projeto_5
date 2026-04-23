@@ -9,18 +9,28 @@ from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 
 from config import Config
-from models import db, User, Organization
+from models import db, User, Organization, Credential, CredentialPermission
 
 mail = Mail()
 
 
+_DEMO_CREDENTIALS = [
+    ('Instagram Empresa', 'social@empresa.com', 'SenhaForte!2026', 'rede_social'),
+    ('AWS Console', 'devops@empresa.com', 'Cloud#Secret42', 'cloud'),
+    ('Banco Itau', 'financeiro@empresa.com', 'Bc@2026Seguro', 'financeiro'),
+    ('Gmail Marketing', 'marketing@empresa.com', 'Email@Keyflow1', 'email'),
+    ('Notion Workspace', 'time@empresa.com', 'Notion#Team24', 'outros'),
+]
+
+
 def _bootstrap_admin():
-    """Cria admin padrão se não existir. Controlado por env vars."""
+    """Cria admin padrão + credenciais de demo se não existir. Idempotente."""
     email = os.getenv('BOOTSTRAP_ADMIN_EMAIL', 'admin@keyflow.local')
     password = os.getenv('BOOTSTRAP_ADMIN_PASSWORD', 'adm123')
     org_name = os.getenv('BOOTSTRAP_ORG_NAME', 'KeyFlow Demo')
 
-    if User.query.filter_by(email=email).first():
+    admin = User.query.filter_by(email=email).first()
+    if admin and Credential.query.filter_by(org_id=admin.org_id).count() > 0:
         return
 
     org = Organization.query.filter_by(name=org_name).first()
@@ -29,15 +39,37 @@ def _bootstrap_admin():
         db.session.add(org)
         db.session.flush()
 
-    pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    db.session.add(User(
-        name='Admin',
-        email=email,
-        password_hash=pw_hash,
-        org_id=org.id,
-        role='admin',
-        is_active_member=True,
-    ))
+    if not admin:
+        pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        admin = User(
+            name='Admin',
+            email=email,
+            password_hash=pw_hash,
+            org_id=org.id,
+            role='admin',
+            is_active_member=True,
+        )
+        db.session.add(admin)
+        db.session.flush()
+
+    from crypto_utils import encrypt_password
+    for name, login, pwd, category in _DEMO_CREDENTIALS:
+        cred = Credential(
+            org_id=org.id,
+            name=name,
+            login=login,
+            encrypted_password=encrypt_password(pwd),
+            category=category,
+            created_by=admin.id,
+        )
+        db.session.add(cred)
+        db.session.flush()
+        db.session.add(CredentialPermission(
+            credential_id=cred.id,
+            user_id=admin.id,
+            can_view_password=True,
+        ))
+
     db.session.commit()
 
 
