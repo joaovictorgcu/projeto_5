@@ -54,15 +54,35 @@ _DEMO_POLICIES = [
 ]
 
 
+def _wipe_org_demo_data(org_id, keep_user_id):
+    """Remove todos os dados de demonstração da org, preservando admin e org."""
+    SecurityScore.query.filter_by(org_id=org_id).delete(synchronize_session=False)
+    BreachResult.query.filter_by(org_id=org_id).delete(synchronize_session=False)
+    PasswordPolicy.query.filter_by(org_id=org_id).delete(synchronize_session=False)
+
+    cred_ids = [c.id for c in Credential.query.filter_by(org_id=org_id).all()]
+    if cred_ids:
+        UserFavorite.query.filter(UserFavorite.credential_id.in_(cred_ids)).delete(synchronize_session=False)
+        AccessLog.query.filter(AccessLog.credential_id.in_(cred_ids)).delete(synchronize_session=False)
+        CredentialPermission.query.filter(CredentialPermission.credential_id.in_(cred_ids)).delete(synchronize_session=False)
+        Credential.query.filter_by(org_id=org_id).delete(synchronize_session=False)
+
+    User.query.filter(User.org_id == org_id, User.id != keep_user_id).delete(synchronize_session=False)
+    db.session.flush()
+
+
 def _bootstrap_demo():
-    """Dataset completo de demo. Idempotente: só cria se a org estiver vazia."""
+    """Dataset completo de demo. Se o seed estiver incompleto, limpa e recria."""
     email = os.getenv('BOOTSTRAP_ADMIN_EMAIL', 'admin@keyflow.local')
     password = os.getenv('BOOTSTRAP_ADMIN_PASSWORD', 'adm123')
     org_name = os.getenv('BOOTSTRAP_ORG_NAME', 'KeyFlow Demo')
 
     admin = User.query.filter_by(email=email).first()
-    if admin and Credential.query.filter_by(org_id=admin.org_id).count() > 0:
-        return
+    if admin:
+        existing_creds = Credential.query.filter_by(org_id=admin.org_id).count()
+        if existing_creds == len(_DEMO_CREDENTIALS):
+            return
+        _wipe_org_demo_data(admin.org_id, admin.id)
 
     org = Organization.query.filter_by(name=org_name).first()
     if not org:
@@ -82,6 +102,11 @@ def _bootstrap_demo():
         )
         db.session.add(admin)
         db.session.flush()
+    else:
+        admin.name = 'Ana Silva'
+        admin.role = 'admin'
+        admin.is_active_member = True
+        admin.password_hash = admin_pw_hash
 
     members = [admin]
     for name, member_email, role, active in _DEMO_MEMBERS:
